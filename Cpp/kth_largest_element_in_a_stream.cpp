@@ -1,22 +1,34 @@
-#include <stdc++.h>
+#include <stdlib.h>
+#include <iostream>
+#include <queue>
 using namespace std;
 class KthLargest
 {
-public:
+private:
     priority_queue<int, vector<int>, greater<int>> heap;
+    int k;
+
+public:
     KthLargest(int k, vector<int> &nums)
     {
-        sort(nums.begin(), nums.end());
-        heap = slice(nums, k);
+        this->k = k;
+        for (int i : nums)
+        {
+            add(i);
+        }
     }
 
     int add(int val)
     {
-        int curr_kth = heap[0];
-        if (val < curr_kth)
+        if (heap.size() < k || val > heap.top())
         {
-            return curr_kth;
+            heap.push(val);
         }
+        if (heap.size() > k)
+        {
+            heap.pop();
+        }
+        return heap.top();
     }
 };
 
@@ -25,3 +37,20 @@ public:
  * KthLargest* obj = new KthLargest(k, nums);
  * int param_1 = obj->add(val);
  */
+
+int main()
+{
+    int k = 3;
+    int kth_largest;
+    vector<int> nums{3, 21, 3, 4};
+    vector<string> commands{"add", "add", "add", "add"};
+    vector<int> nums_to_add{6, 2, 5, 30};
+
+    KthLargest obj(k, nums);
+    for (const int i : nums_to_add)
+    {
+        kth_largest = obj.add(i);
+        cout << kth_largest;
+    }
+    return 0;
+}
