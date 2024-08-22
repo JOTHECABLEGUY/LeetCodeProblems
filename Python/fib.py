@@ -1,11 +1,7 @@
 from time import perf_counter
 import sys
 def fib(num:int):
-    if num == 0:
-        return 0
-    if num == 1:
-        return 1
-    return fib(num-1) + fib(num-2)
+    return 0 if num <= 0 else fib(num-1) + fib(num-2)
 def main():
     target_number_index = sys.argv[1] if len(sys.argv[1:]) else 50
     start = perf_counter()
