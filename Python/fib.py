@@ -3,7 +3,7 @@ import sys
 from functools import lru_cache
 import re
 @lru_cache()
-def fib(num:int): # 1, 1, 2, 3
+def fib(num:int) -> int: # 1, 1, 2, 3
     """
     Compute the Fibonacci number at a given index using memoization.
 
