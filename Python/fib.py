@@ -1,6 +1,7 @@
 from time import perf_counter
 import sys
 from functools import lru_cache
+import re
 @lru_cache()
 def fib(num:int): # 1, 1, 2, 3
     """
@@ -17,7 +18,10 @@ def fib(num:int): # 1, 1, 2, 3
     """
     return num if num <= 1 else fib(num-1) + fib(num-2)
 def main():
-    target_number_index = int(sys.argv[1]) if len(sys.argv) > 1 else 50
+    target_number_index = sys.argv[1] if len(sys.argv) > 1 else "50"
+    if not re.match(r"\d+", target_number_index):
+        raise ValueError("Invalid value, must enter a whole number >= 0")
+    target_number_index = int(target_number_index)
     start = perf_counter()
     print(fib(target_number_index))
     print(f"time taken: {perf_counter()-start:.4f} seconds")
