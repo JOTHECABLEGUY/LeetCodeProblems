@@ -15,7 +15,15 @@ def fib(num:int): # 1, 1, 2, 3
 
     Returns:
         int: The Fibonacci number at the specified index.
+        
+    Raises:
+        ValueError: If the input number is less than 0.
+        TypeError: If the input is not of type int.
     """
+    if not isinstance(num, int):
+        raise TypeError(f"Value must be of type int, you provided: {num} of type {type(num)}")
+    if num < 0:
+        raise ValueError(f"Value num must be an integer greater than 0, you entered: {num}")
     return num if num <= 1 else fib(num-1) + fib(num-2)
 def main():
     target_number_index = sys.argv[1] if len(sys.argv) > 1 else "50"
