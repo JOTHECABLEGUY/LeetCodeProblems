@@ -77,14 +77,14 @@ class Solution:
         return self._median_of_single_array(overall_array, median_index = median_index, length = overall_length)
     def findMedianSortedArrays_2(self, nums1:List[int], nums2:List[int])-> Union[float, int, None]:
         new = (nums1+nums2)
-        new.sort()
-        print(new)
         if not (length := len(new)):
             return None
+        new.sort()
+        median_index = length//2
         if length % 2:
-            return new[length//2]
+            return new[median_index]
         else:
-            return sum(new[length//2-1:length//2+1])/2
+            return sum(new[median_index-1:median_index+1])/2
         
 @pytest.mark.parametrize(
     "nums1, nums2, expected",
