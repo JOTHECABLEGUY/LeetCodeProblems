@@ -26,7 +26,7 @@ from typing import List, Union
 import pytest
 class Solution:
     def test(self):
-        return self.findMedianSortedArrays([], [2,3])
+        return self.findMedianSortedArrays_1([], [2,3])
     def _median_of_single_array(self, arr, median_index = None, length = 0):
         if not arr:
             return None
@@ -45,12 +45,10 @@ class Solution:
         if not length % 2:
             target_length += 1
         return median_index, target_length
-    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> Union[int, float,None]:
+    def findMedianSortedArrays_1(self, nums1: List[int], nums2: List[int]) -> Union[int, float,None]:
         if not nums1:
-            print("median of nums2")
             return self._median_of_single_array(nums2)
         if not nums2:
-            print("median of nums1")
             return self._median_of_single_array(nums1)
         overall_array = []
         overall_length = len(nums1) + len(nums2)
@@ -77,6 +75,17 @@ class Solution:
         if len(overall_array)- target_length < 0:
             overall_array.extend(nums1 or nums2)
         return self._median_of_single_array(overall_array, median_index = median_index, length = overall_length)
+    def findMedianSortedArrays_2(self, nums1:List[int], nums2:List[int])-> Union[float, int, None]:
+        new = (nums1+nums2)
+        new.sort()
+        print(new)
+        if not (length := len(new)):
+            return None
+        if length % 2:
+            return new[length//2]
+        else:
+            return sum(new[length//2-1:length//2+1])/2
+        
 @pytest.mark.parametrize(
     "nums1, nums2, expected",
     [
@@ -114,9 +123,9 @@ class Solution:
     ]
 )
 def test_all(nums1, nums2, expected):
-    
-    median = Solution().findMedianSortedArrays(nums1, nums2)
-    assert median == expected
+    median_1 = Solution().findMedianSortedArrays_1(nums1.copy(), nums2.copy())
+    median_2 = Solution().findMedianSortedArrays_2(nums1.copy(), nums2.copy())
+    assert median_1 == median_2 == expected
 
 if __name__ == "__main__":
     print(Solution().test())
