@@ -26,23 +26,37 @@ from typing import List, Union
 import pytest
 class Solution:
     def test(self):
-        return self.findMedianSortedArrays([1], [2,3,4,5])
-    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> Union[int, float,None]:
-        if not nums1 and not nums2:
+        return self.findMedianSortedArrays([], [2,3])
+    def _median_of_single_array(self, arr, median_index = None, length = 0):
+        if not arr:
             return None
+        if not length:
+            length = len(arr)
+        if median_index is None:
+            median_index = length//2
+        return (
+            arr[median_index]
+            if length % 2
+            else sum(arr[median_index-1 : median_index + 1]) / 2
+        )
+    def get_median_index_and_target_length(self, length)->tuple[int, int]:
+        median_index = length//2
+        target_length = median_index + 1
+        if not length % 2:
+            target_length += 1
+        return median_index, target_length
+    def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> Union[int, float,None]:
+        if not nums1:
+            print("median of nums2")
+            return self._median_of_single_array(nums2)
+        if not nums2:
+            print("median of nums1")
+            return self._median_of_single_array(nums1)
         overall_array = []
         overall_length = len(nums1) + len(nums2)
-        median_index = overall_length//2
-        target_length = median_index + 1
-        if not overall_length % 2:
-            median_index = slice(median_index-1, median_index+1, 1)
-            target_length += 1
-        if not nums1:
-            return nums2[median_index] if overall_length % 2 else sum(nums2[median_index])/2 # type: ignore
-        if not nums2:
-            return nums1[median_index] if overall_length % 2 else sum(nums1[median_index])/2 # type: ignore
+        median_index, target_length = self.get_median_index_and_target_length(overall_length)
         r_element, l_element = 1,1
-        while l_element and r_element:
+        while l_element is not None and r_element is not None:
             if not overall_array:
                 r_element = nums1.pop(0)
                 l_element = nums2.pop(0)
@@ -58,12 +72,11 @@ class Solution:
                     overall_array.append(l_element)
                     break
                 r_element = nums1.pop(0)
-        if (num_to_add := len(overall_array)- target_length) < 0:
-            if nums1:
-                overall_array.extend(nums1[:abs(num_to_add)+1])
-            else:
-                overall_array.extend(nums2[:abs(num_to_add)+1])
-        return overall_array[median_index] if overall_length % 2 else sum(overall_array[median_index])/2 #type: ignore
+            if len(overall_array) >= target_length:
+                break
+        if len(overall_array)- target_length < 0:
+            overall_array.extend(nums1 or nums2)
+        return self._median_of_single_array(overall_array, median_index = median_index, length = overall_length)
 @pytest.mark.parametrize(
     "nums1, nums2, expected",
     [
