@@ -50,6 +50,7 @@ class Solution:
     def longestPalindrome_2(self, s:str) -> str:
         max_len:int = 0
         max_sub:str = ""
+        max_start = 0
         if len(s) == 1: 
             return s
 
@@ -65,7 +66,7 @@ class Solution:
             new_len = right-left+1
             if new_len > max_len:
                 max_len = new_len
-                max_sub = s[left+1:right]
+                max_start = left
 
         # odd length palindromes
         for i in range(len(s)-2):
@@ -77,8 +78,8 @@ class Solution:
             new_len = right-left+1
             if new_len > max_len:
                 max_len = new_len
-                max_sub = s[left+1:right]
-        return max_sub
+                max_start = left
+        return s[max_start+1:max_start+max_len]
             
                     
 
