@@ -42,6 +42,7 @@ class Solution:
     def test(self) -> str:
         self.convert("PAYPALISHIRING", 3)
         self.convert_2("PAYPALISHIRING", 3)
+        self.convert_3("PAYPALISHIRING", 3)
         return ""
     def convert(self, s: str, numRows: int) -> str:
         if numRows == 1:
@@ -75,6 +76,22 @@ class Solution:
             row = numRows - 1 - mod_remainder if int_div % 2 else mod_remainder
             rows[row] += char
 
+        return "".join(rows.values())
+    def convert_3(self, s:str, numRows:int)->str:
+        if numRows == 1 or numRows >= len(s):
+            return s
+        if numRows <= 0:
+            return ""
+        delta = 0
+        rows = defaultdict(str)
+        i = 0
+        for char in s:
+            rows[i] += char
+            if i == 0:
+                delta = 1
+            elif i == numRows-1:
+                delta = -1
+            i += delta
         return "".join(rows.values())
 if __name__ == "__main__":
     Solution().test()
@@ -113,7 +130,7 @@ if __name__ == "__main__":
 def test_convert(s, numRows, expected):
 
     # Act
-    result = Solution().convert_2(s, numRows)
+    result = Solution().convert_3(s, numRows)
 
     # Assert
     assert result == expected
