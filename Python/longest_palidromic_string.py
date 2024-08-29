@@ -21,7 +21,8 @@ s consist of only digits and English letters."""
 import pytest
 class Solution:
     def test(self):
-        return self.longestPalindrome("babad")
+        return self.longestPalindrome_3("babad")
+    
     def is_palindrome(self, s:str) -> bool:
         """
             Check if a given string is a palindrome.
@@ -107,6 +108,7 @@ class Solution:
         #   or left does not equal right, meaning the pointers are currently not correct. 
         #   We account for this by subtracting 2 from the original distance (orig dist = right-left+1)
         return right-left-1
+    
     # complexity: O(n^2), expand around centers approach
     def longestPalindrome_2(self, s:str) -> str:
         """
@@ -152,13 +154,69 @@ class Solution:
                 max_dist = even_dist
             
         return s[max_start: max_start + max_dist]
+    
+    # Complexity: O(n); implements Manacher's algorithm
+    def longestPalindrome_3(self, s:str)->str:
+        """
+            Find the longest palindromic substring in a given string using an optimized approach.
+
+            This function transforms the input string to handle both even and odd length palindromes uniformly, then applies a technique to efficiently find the longest palindromic substring.
+
+            Args:
+                s (str): The input string to search for palindromic substrings.
+
+            Returns:
+                str: The longest palindromic substring found in the input string. If the input string is empty, an empty string is returned.
+
+            Raises:
+                None
+
+            Examples:
+                longestPalindrome_3(self, "babad")  # Returns "bab" or "aba"
+                longestPalindrome_3(self, "cbbd")   # Returns "bb"
+        """
+        # Transform the original string to avoid separate handling of even and odd length palindromes
+        if s == s[::-1]:
+            return s
+        if len(s) == 2:
+            return s[0]
+        s_prime = '#'.join(f'^{s}$')
+        n = len(s_prime)
+        p = [0] * n  # Array to store the palindrome radius at each position
+        center = right = 0
+    
+        for i in range(1, n-1):
+            mirror = 2 * center - i  # Find the mirror of the current position
+            
+            # if the right pointer is above the current position, that means that we are currently within the bounds
+            #   of the rightmost palindrome found so far, so we leverage the mirrored position to determine
+            #   if we can use previous info or is a new expansion is needed
+            if right > i:
+                p[i] = min(right - i, p[mirror])
+        
+            # Expand around center (if p[i] was altered in the previous block, this loop will still
+            #   execute, as there may still be a longer palindrome centered at center). This 
+            #   simply uses the radius of the mirrored center to skip over as many characters 
+            #   as possible to avoid extra computation.
+            while s_prime[i + 1 + p[i]] == s_prime[i - 1 - p[i]]:
+                p[i] += 1
+        
+            # Adjust the center if expanded beyond the current right boundary
+            if i + p[i] > right:
+                center, right = i, i + p[i]
+    
+        # Find the maximum element in p
+        max_len, center_index = max((n, i) for i, n in enumerate(p))
+        start = (center_index - max_len) // 2  # Convert back to the original string's index
+    
+        return s[start:start + max_len]
 
 @pytest.mark.parametrize("input_str, expected_output", [
     # Happy path tests
-    ("babad", "bab"),  # "bab" and "aba" are both valid, but "bab" is expected
+    ("babad", ("bab", "aba")),  # "bab" and "aba" are both valid, but "bab" is expected
     ("cbbd", "bb"),    # "bb" is the longest palindrome
     ("a", "a"),        # Single character string
-    ("ac", "a"),       # No palindrome longer than 1 character
+    ("ac", ("a", "c")),       # No palindrome longer than 1 character
 
     # Edge cases
     ("", ""),          # Empty string
@@ -184,9 +242,13 @@ def test_longestPalindrome(input_str, expected_output):
     solution = Solution()
 
     # Act
-    result = solution.longestPalindrome_2(input_str)
+    result = solution.longestPalindrome_3(input_str)
 
     # Assert
-    assert result == expected_output
+    if isinstance(expected_output, tuple):
+        assert result in expected_output
+    else:
+        assert result == expected_output
+    
 if __name__ == "__main__":
     print(Solution().test())
