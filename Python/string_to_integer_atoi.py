@@ -140,6 +140,7 @@ class Solution:
             Raises:
                 ValueError: If the input string is not valid for conversion.
         """
+        max_int, min_int = pow(2, 31)-1, -pow(2, 31)
         if not isinstance(s, str):
             raise ValueError("Must provide a string to parse")
         if not (s:= re.sub(r"^\s*", r"", s)):
@@ -147,8 +148,7 @@ class Solution:
         sign = -1 if s[0] == '-' else 1
         s = re.sub(r"^[\+\-]{1}", r"", s)
         res = int(match[1])*sign if (match := re.search(r"^(\d+).*$", s)) else 0
-        res = max(res, -pow(2, 31))
-        return min(res, pow(2, 31)-1)
+        return max_int if res > max_int else max(res, min_int)
     def test(self)-> int:
         return self.myAtoi("-+12")
         
