@@ -46,8 +46,17 @@ class Solution:
                 while r > l and height[r] < r_height:
                     r -= 1
         return max_a
+    def maxArea_3(self, height:List[int])->int:
+        max_a, l, r = 0, 0, len(height)-1
+        while l < r:
+            max_a = max(max_a, (r-l)*min(height[l], height[r]))
+            if height[l] < height[r]:
+                l += 1
+            else:
+                r -= 1
+        return max_a
     def test(self):
-        return self.maxArea_2([1, 2, 4, 3])
+        return self.maxArea_3([1, 2, 4, 3])
 @pytest.mark.parametrize("height, expected", [
     # Happy path tests
     ([1, 8, 6, 2, 5, 4, 8, 3, 7], 49),  # ID: typical case
@@ -66,7 +75,7 @@ class Solution:
         "two elements", "large values", "empty list"])
 def test_maxArea(height, expected):
     # Act
-    result = Solution().maxArea_2(height)
+    result = Solution().maxArea_3(height)
 
     # Assert
     assert result == expected
