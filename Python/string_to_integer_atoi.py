@@ -123,7 +123,32 @@ class Solution:
         res = int(res)*sign if res else 0
         res = max(res, -pow(2, 31))
         return min(res, pow(2, 31)-1)
-    
+    def myAtoi_2(self, s: str) -> int:
+        """Converts a string to an integer.
+
+            This function takes a string as input and converts it to an integer, 
+            following the rules of the C-style `atoi` function. It handles leading 
+            whitespace, optional signs, and ignores non-numeric characters after 
+            the number. The integer gets rounded to stay in range [-2^31, 2^31-1].
+
+            Args:
+                s (str): The string to be converted to an integer.
+
+            Returns:
+                int: The converted integer, or 0 if the string does not contain a valid integer.
+
+            Raises:
+                ValueError: If the input string is not valid for conversion.
+        """
+        if not isinstance(s, str):
+            raise ValueError("Must provide a string to parse")
+        if not (s:= re.sub(r"^\s*", r"", s)):
+            return 0
+        sign = -1 if s[0] == '-' else 1
+        s = re.sub(r"^[\+\-]{1}", r"", s)
+        res = int(match[1])*sign if (match := re.search(r"^(\d+).*$", s)) else 0
+        res = max(res, -pow(2, 31))
+        return min(res, pow(2, 31)-1)
     def test(self)-> int:
         return self.myAtoi("-+12")
         
