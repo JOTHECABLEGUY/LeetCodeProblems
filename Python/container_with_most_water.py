@@ -22,7 +22,6 @@ n == height.length
 2 <= n <= 10^5
 0 <= height[i] <= 10^4"""
 from typing import List
-import numpy as np
 import pytest
 class Solution:
     def maxArea(self, height: List[int]) -> int:
@@ -31,6 +30,24 @@ class Solution:
             for x2, y2 in enumerate(height):
                 max_area = max(max_area, min(y1, y2)*(x2-x1))
         return max_area
+    def maxArea_2(self, height:List[int]) -> int:
+        if len(height) in {0, 1}:
+            return 0
+        l, r, max_a = 0, len(height)-1, 0
+        while l < r:
+            l_height, r_height = height[l], height[r]
+            max_a = max(max_a, (r-l) * min(l_height, r_height))
+            if l_height < r_height:
+                l += 1
+                while l < r and height[l] < l_height:
+                    l += 1
+            else:
+                r -= 1
+                while r > l and height[r] < r_height:
+                    r -= 1
+        return max_a
+    def test(self):
+        return self.maxArea_2([1, 2, 4, 3])
 @pytest.mark.parametrize("height, expected", [
     # Happy path tests
     ([1, 8, 6, 2, 5, 4, 8, 3, 7], 49),  # ID: typical case
@@ -49,7 +66,9 @@ class Solution:
         "two elements", "large values", "empty list"])
 def test_maxArea(height, expected):
     # Act
-    result = Solution().maxArea(height)
+    result = Solution().maxArea_2(height)
 
     # Assert
     assert result == expected
+if __name__ == "__main__":
+    print(Solution().test())
