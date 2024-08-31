@@ -63,23 +63,76 @@ Constraints:
 import pytest
 class Solution:
     def intToRoman(self, num: int) -> str:
-        if num > 3999 or num < 1:
+        """
+            Converts an integer to its Roman numeral representation.
+
+            This function takes an integer as input and returns its equivalent Roman numeral 
+            as a string. It handles integers in the range from 1 to 3999, returning an empty 
+            string for values outside this range.
+
+            Args:
+                num (int): The integer to be converted to a Roman numeral.
+
+            Returns:
+                str: The Roman numeral representation of the integer, or an empty string if 
+                the integer is outside the valid range.
+
+            Raises:
+                ValueError: If the input number is not a positive integer.
+        """
+        
+        # return early if an invalid value was entered
+        if num > 3999 or num < 1 or not isinstance(num, int):
             return ""
+        
+        # setup arrays to hold roman numeral relevant info
         factors =   [1000, 500, 100, 50, 10, 5, 1]
         roms =      ["M", "D",  "C", "L", "X", "V", "I"]
+        
+        # array to hold results
         s_array =   [""] * len(roms)
+        
+        # index to point to position that the program is considering
         index = 0
+        
+        # while there are digits to process
         while num:
+            
+            # find the number of roman numerals expected, and get the remainder after division
             num_of_s, num = divmod(num, factors[index])
+            
+            # if the number of digits expected is 4, that means that there has to be a subtractive form inserted
+            #   i.e. if the number is 4, we cant just put IIII, we have to make a few checks that will
+            #   ultimately determine to create a 'IV' token instead.
             if num_of_s == 4:
-                if s_array[index-1] == roms[index-1]:
+                
+                # if the last entry in the result array is a single character (and it is the same as the roman numeral at the same position),
+                #   then the entry that should be entered is the numeral at the current position in front of the numeral
+                #   that came 2 positions before it. e.g. if the number is 90, and s_array[index-1] == 'L', then rather than
+                #   place 4 'X's, replace the L with the current char ('X') followed by the numeral 2 places before ('C') to make 
+                #   the proper entry ('XC')
+                if s_array[index-1]:
                     s_array[index-1] = f"{roms[index]}{roms[index-2]}"
+                    
+                # if the previous check was False, then the current factor must be a 'half-way' value (5 or 50)
+                #   for this case, still replace the previous entry, but only go back a single character rather than 2.
+                #   e.g. the number is 40. It is certain that the last entry in the s_array is empty, as this statement only
+                #   executes if the previous check was False. So when we see that we may need 4 'X's, we see that we only need
+                #   to put the numeral of the previous position after the current numeral ('L'), thus making the entry ('XL')
                 else:
                     s_array[index-1] = f"{roms[index]}{roms[index-1]}"
+            
+            # if the expected number of digits is between 1 and 3 inclusive, the entry is simply the numeral repeated the
+            #   expected number of times
             elif num_of_s:
                 s_array[index] = roms[index]*num_of_s
+            
+            # increment the index to look at the next position
             index += 1
+        
+        # combine all the entries to get the complete numeral
         return "".join(s_array)
+    
     def test(self):
         return self.intToRoman(3888)
 
