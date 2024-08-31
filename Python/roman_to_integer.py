@@ -56,6 +56,15 @@ class Solution:
                 continue
             arr[i-1] = vals[i]
         return sum(arr)
+    def romanToInt_2(self, s:str) -> int:
+        rom_nums = {'I':1, 'V':5, 'X':10, 'L':50, 'C':100, 'D':500, 'M':1000}
+        acc = 0
+        for i in range(len(s)):
+            if i + 1 < len(s) and rom_nums[s[i]] < rom_nums[s[i+1]]:
+                acc -= rom_nums[s[i]]
+            else:
+                acc += rom_nums[s[i]]
+        return acc
     def test(self):
         return self.romanToInt("MMMDCCCLXXXVIII")
     
