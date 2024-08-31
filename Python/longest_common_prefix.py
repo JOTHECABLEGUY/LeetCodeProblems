@@ -40,7 +40,7 @@ class Solution:
                 if no common prefix exists.
         """
         # if smallest string is empty, return nothing
-        if not (min_str_len := min(len(s) for s in strs)):
+        if not (strs and (min_str_len := min(len(s) for s in strs))):
             return ""
         # for each index in the smallest string, build a set with each character at the same position
         #   if any characters are different, the set will have a length greater than 1, so decrement i 
@@ -59,10 +59,35 @@ class Solution:
 @pytest.mark.parametrize(
         "strings, expected", 
     [
-        (["dog", "dogbone", "debt"], "d"),
-    ], 
-        ids = ["single char in common"]
-)
+        # Happy path tests
+        (["flower", "flow", "flight"], "fl"),  # common prefix "fl"
+        (["dog", "racecar", "car"], ""),       # no common prefix
+        (["interspecies", "interstellar", "interstate"], "inters"),  # common prefix "inters"
+        (["throne", "throne"], "throne"),      # identical strings
+
+        # Edge cases
+        ([""], ""),                            # single empty string
+        (["a"], "a"),                          # single character string
+        (["", "b"], ""),                       # one empty string
+        (["prefix", "prefixes", "prefixing"], "prefix"),  # common prefix is the entire first string
+        (["pre", "prefix", "prefixing"], "pre"),  # common prefix "pre"
+        (["a", "ab", "abc"], "a"),             # common prefix "a"
+
+        # Error cases
+        ([], ""),                              # empty list
+], ids=[
+    "common_prefix_fl",
+    "no_common_prefix",
+    "common_prefix_inters",
+    "identical_strings",
+    "single_empty_string",
+    "single_character_string",
+    "one_empty_string",
+    "common_prefix_entire_first_string",
+    "common_prefix_pre",
+    "common_prefix_a",
+    "empty_list"
+])
 def test_all(strings, expected):
     result = Solution().longestCommonPrefix(strings)
     assert result == expected
