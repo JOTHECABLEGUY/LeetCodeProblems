@@ -55,12 +55,12 @@ class Solution:
                 If no such triplets exist, an empty list is returned.
         """
         # sort the array so it is easier to allow some assumptions (such as if the current element > 0, break)
-        nums.sort()
+        nums = sorted(nums)
         n = len(nums)
         res = []
         
         # loop through the numbers list, keeping track of index
-        for i, num in enumerate(nums):
+        for i in range(len(nums)):
             
             # if nums[i] > 0, then no triplet will ever be 0 (need a negative number or multiple 0s)
             # if i > n-2, then no triplet can be made as there will not be 3 numbers left
@@ -68,7 +68,7 @@ class Solution:
                 break
             
             # skip over duplicate starting points
-            if i > 0 and num == nums[i-1]:
+            if i > 0 and nums[i] == nums[i-1]:
                 continue
             
             # initialize 2 pointers: 1 for the left and 1 for the right, so the indices will be i, l, r
@@ -79,7 +79,7 @@ class Solution:
             while l < r:
                 
                 # get the total of the current triplet
-                total = num + nums[l] + nums[r]
+                total = nums[i] + nums[l] + nums[r]
                 
                 # if the triplet sums to above 0, need to decrease the value of the triplet, which is achieved by decrementing the right index
                 if total > 0:
@@ -91,7 +91,7 @@ class Solution:
                     
                 # if the triplet sums to 0, we have a valid entry. Add it to the result list
                 else:
-                    triplet = [num, nums[l], nums[r]]
+                    triplet = [nums[i], nums[l], nums[r]]
                     res.append(triplet)
                     
                     # skip over duplicates from the left by incrementing left pointer if the left value is the same as what is in the current triplet
