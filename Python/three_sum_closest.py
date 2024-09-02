@@ -30,27 +30,27 @@ from sys import maxsize
 from typing import List, Union
 class Solution:
     def test(self):
-        return self.threeSumClosest([0,1,2], 1)
+        return self.threeSumClosest([4,0,5,-5,3,3,0,-4,-5], -2)
     def threeSumClosest(self, nums: List[int], target: int) -> Union[int,None]:
-        n = len(nums)
         nums.sort()
-        closest_sum = maxsize
-        print(nums)
+        closest_sum, diff, n = maxsize, maxsize, len(nums)
         for i in range(n-2):
-            if not closest_sum:
-                break
-            l = i + 1
-            r = n - 1
-            while l < r and closest_sum:
-                curr_sum = nums[i] + nums[l] + nums[r] - target
-                print(i, l, r, curr_sum)
-                if abs(curr_sum) <= abs(closest_sum):
+            if i > 0 and nums[i] == nums[i-1]:
+                continue
+            l, r = i + 1, n - 1
+            while l < r and closest_sum != target:
+                curr_sum = nums[i] + nums[l] + nums[r]
+                d = abs(curr_sum-target)
+                if not d:
+                    return curr_sum
+                if d < diff:
+                    diff = d
                     closest_sum = curr_sum
-                if curr_sum < 0:
+                if curr_sum < target:
                     l += 1
                 else:
                     r -= 1
-        return closest_sum + target if closest_sum - maxsize else None
+        return closest_sum if closest_sum - maxsize else None
 @pytest.mark.parametrize(
 "nums, target, expected",
 [
