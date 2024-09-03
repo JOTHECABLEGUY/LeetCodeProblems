@@ -45,10 +45,10 @@ class Solution:
         if not isinstance(x, int):
             return False
         s = '#'.join(str(x))
-        if len(s) == 1:
+        if len(s) in {2, 1}:
             return True
-        if len(s) == 2:
-            return s[0] == s[1]
+        if len(s) == 3:
+            return s[0] == s[-1]
         mid_ind = len(s)//2
         return s[:mid_ind] == s[:mid_ind:-1]
     @lru_cache()
