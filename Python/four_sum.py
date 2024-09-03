@@ -30,51 +30,46 @@ import pytest
 from typing import List
 class Solution:
     def test(self):
-        return self.fourSum([1,-2,-5,-4,-3,3,3,5], -11)
-    def check_inner_window(self, start, start_2, nums, target, res_set):
-        r = len(nums)-1
-        l = start_2 + 1
-        quads = []
-        while l < r:
-            if nums[r] < 0 and target > 0:
-                l = r
-                continue
-            quad = [nums[start], nums[start_2], nums[l], nums[r]]
-            total = sum(quad)
-            print(start, start_2, l, r, quad, total)
-            if total == target:
-                if set(quad) in res_set:
+        return self.fourSum([0,0,0,0], 0)
+    def k_sum(self, start, nums, k, target, output, curr_klet):
+        if k < 2:
+            return []
+        if k == len(nums) and sum(nums) == target:
+            output.append(nums)
+            return
+        if k == 2:
+            print('k is 2', curr_klet)
+            l, r = start, len(nums) - 1
+            while l < r:
+                total = nums[l] + nums[r]
+                # print(l, r,nums[l], nums[r],  total, target)
+                if total < target:
                     l += 1
+                elif total > target:
+                    r-= 1
+                else:
+                    # print('output appended: ', curr_klet + [nums[l], nums[r]])
+                    output.append(curr_klet + [nums[l], nums[r]])
+                    l += 1
+                    while l < r and nums[l] == nums[l-1]:
+                        l += 1
+                    while r < len(nums)-1 and l < r and nums[r] == nums[r+1]:
+                        r -= 1
+        else:
+            for i in range(start, len(nums)-k + 1):
+                if i > start and nums[i] == nums[i-1]:
                     continue
-                res_set.append(set(quad))
-                quads.append(quad)
-                while l < r and nums[l] == nums[l+1]:
-                    l += 1
-                while l < r and nums[r-1] == nums[r]:
-                    r-=1
-            if total < target:
-                l += 1
-            if total > target:
-                r -= 1
-        return quads
+                curr_klet.append(nums[i])
+                self.k_sum(i+1, nums, k-1, target-nums[i], output, curr_klet)
+                curr_klet.pop()
+                # print(curr_klet)
+        return
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
         nums.sort()
-        if not (n := len(nums)):
-            return []
-        if nums[-1] < 0 and target > 0:
-            return []
-        res = []
-        res_set = []
-        for start in range(n-3):
-            if nums[start] > 0 and target - nums[start] < 0:
-                return res
-            if start > 0 and nums[start] == nums[start-1]:
-                continue
-            for start_2 in range(start+1, n-2):
-                quads = self.check_inner_window(start, start_2, nums, target, res_set)
-                res.extend(quads)
+        k, output, curr_klet = 4, [], []
+        self.k_sum(0, nums, k, target, output, curr_klet)
                         
-        return res
+        return output
 
 @pytest.mark.parametrize(
     "nums, target, expected",
