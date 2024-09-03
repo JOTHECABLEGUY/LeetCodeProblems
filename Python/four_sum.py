@@ -1,15 +1,11 @@
 """18. 4Sum
 Medium
-Topics
-Companies
 Given an array nums of n integers, return an array of all the unique quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
 
 0 <= a, b, c, d < n
 a, b, c, and d are distinct.
 nums[a] + nums[b] + nums[c] + nums[d] == target
 You may return the answer in any order.
-
- 
 
 Example 1:
 
@@ -19,7 +15,6 @@ Example 2:
 
 Input: nums = [2,2,2,2,2], target = 8
 Output: [[2,2,2,2]]
- 
 
 Constraints:
 
@@ -29,8 +24,10 @@ Constraints:
 import pytest
 from typing import List
 class Solution:
+    
     def test(self):
         return self.fourSum([0,0,0,0], 0)
+    
     def two_sum(self, start:int, nums:List[int], target:int) -> List[List[int]]:
         """
             Returns zero or more pairs of numbers in the given array such that each pair sums up
@@ -163,7 +160,7 @@ class Solution:
         
         # Edge cases
         ([], 0, []),
-        ([1, 2, 3, 4], 11, []),
+        ([1, 2, 3, 4], 10, [[1, 2, 3, 4]]),
         ([1, 1, 1, 1, 1, 1], 4, [[1, 1, 1, 1]]),
         
         # Error cases
@@ -189,5 +186,6 @@ def test_fourSum(nums, target, expected):
     
     # Assert
     assert e_sets == r_sets
+    
 if __name__ == "__main__":
     print(Solution().test())
