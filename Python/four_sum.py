@@ -31,30 +31,36 @@ from typing import List
 class Solution:
     def test(self):
         return self.fourSum([0,0,0,0], 0)
+    def two_sum(self, start, nums, target):
+        out = []
+        l, r = start, len(nums) - 1
+        while l < r:
+            total = nums[l] + nums[r]
+            if total < target:
+                l += 1
+            elif total > target:
+                r -= 1
+            else:
+                out.append([nums[l], nums[r]])
+                l += 1
+                r -= 1
+                while l < r and nums[l] == nums[l-1]:
+                    l += 1
+                while r < len(nums)-1 and l < r and nums[r] == nums[r+1]:
+                    r -= 1
+        return out
     def k_sum(self, start, nums, k, target, output, curr_klet):
+        avg= target //k
+        if start < len(nums) and nums[start] > avg or nums[-1] < avg:
+            return
         if k < 2:
             return []
         if k == len(nums) and sum(nums) == target:
             output.append(nums)
             return
         if k == 2:
-            print('k is 2', curr_klet)
-            l, r = start, len(nums) - 1
-            while l < r:
-                total = nums[l] + nums[r]
-                # print(l, r,nums[l], nums[r],  total, target)
-                if total < target:
-                    l += 1
-                elif total > target:
-                    r-= 1
-                else:
-                    # print('output appended: ', curr_klet + [nums[l], nums[r]])
-                    output.append(curr_klet + [nums[l], nums[r]])
-                    l += 1
-                    while l < r and nums[l] == nums[l-1]:
-                        l += 1
-                    while r < len(nums)-1 and l < r and nums[r] == nums[r+1]:
-                        r -= 1
+            for pair in self.two_sum(start, nums, target):
+                output.append(curr_klet + pair)
         else:
             for i in range(start, len(nums)-k + 1):
                 if i > start and nums[i] == nums[i-1]:
@@ -62,7 +68,6 @@ class Solution:
                 curr_klet.append(nums[i])
                 self.k_sum(i+1, nums, k-1, target-nums[i], output, curr_klet)
                 curr_klet.pop()
-                # print(curr_klet)
         return
     def fourSum(self, nums: List[int], target: int) -> List[List[int]]:
         nums.sort()
