@@ -23,6 +23,7 @@ The number of nodes in the list is sz.
 1 <= n <= sz
 
 Follow up: Could you do this in one pass?"""
+from operator import index
 import pytest
 from typing import Optional
 # Definition for singly-linked list.
@@ -32,7 +33,7 @@ class ListNode:
         self.next = next
 class Solution:
     def test(self):
-        nums = [1, 2]
+        nums = [1]
         dummy = ListNode(val = nums[-1], next = None)
         for n in nums[-2::-1]:
             dummy = ListNode(val = n, next = dummy)
@@ -60,14 +61,22 @@ class Solution:
         index_to_remove = len(nodes)-n
         if index_to_remove > len(nodes) or index_to_remove < 0:
             return nodes[0]
-        nodes[-n].next = None
-        nodes.pop(-n)
-        if not len(nodes):
+
+        # unlink from node to remove
+        nodes[index_to_remove].next = None
+
+        if index_to_remove == 0 and len(nodes) > 1:
+            return nodes[1]
+        if index_to_remove <= 0:
             return None
-        if n == 1:
-            nodes[-n].next = None
-        elif n<= len(nodes):
-            nodes[-n].next = nodes[-n+1]
+        nodes[index_to_remove-1].next = nodes[index_to_remove+1]if index_to_remove < len(nodes)-1 else None
         return nodes[0]
 if __name__ == "__main__":
-    print(Solution().test())
+    res = Solution().test()
+    while res is not None:
+        if res.next is not None:
+            print(res.val, '->', res.next.val)
+        else:
+            print(res.val)
+        res = res.next
+        
