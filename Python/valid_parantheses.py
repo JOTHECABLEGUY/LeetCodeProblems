@@ -42,17 +42,50 @@ class Solution:
     def test(self):
         return self.isValid("(){}}{")
     def isValid(self, s: str) -> bool:
+        """
+            Determines if the input string of parentheses is valid.
+
+            This function checks whether the given string containing parentheses, brackets, 
+            and braces is valid. A string is considered valid if every opening bracket has 
+            a corresponding closing bracket in the correct order.
+
+            Args:
+                s (str): The string containing the parentheses to validate.
+
+            Returns:
+                bool: True if the string is valid, False otherwise.
+        """
+        
+        # dictionary to map opening characters to their corresponding closing characters
         open_close_map = {'(':')',
                           '{':'}',
                           '[':']'}
+        
+        # list to hold the opening characters before their closers are seen in the order that they appear
         stack = []
+        
+        # any string that has an odd number of characters must not be valid (1 open + 1 close = 2 chars), 
+        #   odd means it is certain that there are not enough closers for the openers or vice versa
         if len(s) % 2:
             return False
+        
+        # loop through the characters in the input string
         for char in s:
+            
+            # if the current char is an opener, add to the "top" of the stack
             if char in open_close_map:
                 stack.append(char)
+                
+            # the character is not an opener,
+            #   and the stack is empty or
+            #   the top of the stack does not contain the current character's
+            #   opener, meaning the closer came at the wrong order,
+            # then the string is not valid, return False
             elif not stack or open_close_map.get(stack.pop(-1), '') != char:
                 return False
+        
+        # return True if stack is empty (all openers found closers in the correct order),
+        #   False if there are still openers on the stack (no corresponding closers found)
         return not stack
     
 @pytest.mark.parametrize("s, expected", [
