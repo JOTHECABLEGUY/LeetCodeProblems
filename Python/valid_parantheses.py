@@ -54,5 +54,32 @@ class Solution:
             elif not stack or open_close_map.get(stack.pop(-1), '') != char:
                 return False
         return not stack
+    
+@pytest.mark.parametrize("s, expected", [
+    # Happy path tests
+    ("()", True),
+    ("()[]{}", True),
+    ("{[()]}", True),
+    
+    # Edge cases
+    ("", True),
+    ("(", False),
+    (")", False),
+    ("([)]", False),
+    ("{[}", False),
+    
+    # Error cases
+    ("{[()]", False),
+    ("{[()]]", False),
+    ("{[()]}{", False),
+],
+ids = ["single_pair", "multiple_pairs", "nested_pairs", "empty_string", "single_open_bracket", "single_close_bracket",
+       "incorrectly_nested", "incomplete_nested", "missing_closing_bracket", "extra_closing_bracket", "extra_opening_bracket"])
+def test_isValid(s, expected):
+    # Act
+    result = Solution().isValid(s)
+    
+    # Assert
+    assert result == expected
 if __name__ == "__main__":
     print(Solution().test())
