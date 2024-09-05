@@ -44,31 +44,65 @@ class ListNode:
     def __init__(self, val=0, next=None):
         self.val = val
         self.next = next
+        
 class Solution:
     def test(self):
         return linkedlist_to_list(self.mergeKLists([list_to_linkedlist([1, 2, 3]), list_to_linkedlist([4, 5, 6])]))
+    
     def merge_2_lists(self, l1, l2):
+        """
+            Merges two sorted linked lists into a single sorted linked list.
+
+            This function takes two sorted linked lists and merges them into one sorted linked list. 
+            It iterates through both lists, comparing their values and appending the smaller value to 
+            the merged list, while also handling cases where one of the lists may be empty.
+
+            Args:
+                l1 (Optional[ListNode]): The head of the first sorted linked list.
+                l2 (Optional[ListNode]): The head of the second sorted linked list.
+
+            Returns:
+                Optional[ListNode]: The head of the merged sorted linked list. 
+                Returns None if any of the nodes contain non-integer values.
+        """
+        
+        # if one list is empty, return the other. If both lists are empty, the first check will return None (the second list)
         if not l1:
             return l2
         if not l2:
             return l1
+        
+        # initialize a dummy and a head to point to the start of a new list
         dummy = head = ListNode()
+        
+        # while both lists are not empty
         while l1 and l2:
+            
+            # get the values and check that they are valid for comparison
             val1, val2 = l1.val, l2.val
             if not (isinstance(val1, int) and isinstance(val2, int)):
                 return None
+            
+            # set the new list's next node to the lower value node and progress the list that node's list
             if val1 < val2:
                 dummy.next = l1
                 l1 = l1.next
             else:
                 dummy.next = l2
                 l2 = l2.next
+            
+            # move to next value for the new list to accept new nodes
             dummy = dummy.next
+        
+        # after one or both of the lists are consumed, add the remaining nodes from either list to the new list
         if l1:
             dummy.next = l1
         if l2:
             dummy.next = l2
+        
+        # return the first node in the new list
         return head.next
+    
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         """
             Merges k sorted linked lists into a single sorted linked list.
@@ -96,14 +130,36 @@ class Solution:
         # sort the list and return the result built into a linked list
         overall_list.sort()
         return list_to_linkedlist(overall_list) if overall_list else None
+    
     def mergeKLists_2(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        """
+            Merges k sorted linked lists into a single sorted linked list.
+
+            This function takes a list of k sorted linked lists and merges them into one 
+            sorted linked list. It filters out any None values from the input list and 
+            iteratively merges pairs of lists until only one merged list remains.
+
+            Args:
+                lists (List[Optional[ListNode]]): A list of linked lists to be merged.
+
+            Returns:
+                Optional[ListNode]: The head of the merged sorted linked list. 
+                Returns None if all input lists are empty.
+        """
+        # filter out null lists as they should not be considered when sorting, return None if there are no valid lists
         if not (lists_to_merge := list(filter(lambda x: x is not None, lists))):
             return None
-        merged = None
-        while len(lists) > 1:
-            merged = self.merge_2_lists(lists[0], lists[1])
-            lists.append(merged)
-            lists = lists[2:]
+        
+        # while there is more than 1 list available to merge, merge 2 at a time
+        # and add the result to the end of the list, then remove the 2 lists that were just sorted.
+        # This removes any extra sorting that is done by the iterative approach
+        while len(lists_to_merge) > 1:
+            merged = self.merge_2_lists(lists_to_merge[0], lists_to_merge[1])
+            lists_to_merge.append(merged)
+            lists_to_merge = lists_to_merge[2:]
+        
+        # return the head of the final sorted list
+        return lists_to_merge[0]
             
 def linkedlist_to_list(node:Optional[ListNode]) -> List[int]:
     """
