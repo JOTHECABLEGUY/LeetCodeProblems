@@ -35,6 +35,7 @@ k == lists.length
 lists[i] is sorted in ascending order.
 The sum of lists[i].length will not exceed 104."""
 
+from heapq import heappush
 import pytest
 from typing import Optional, List
 
@@ -46,6 +47,28 @@ class ListNode:
 class Solution:
     def test(self):
         return linkedlist_to_list(self.mergeKLists([list_to_linkedlist([1, 2, 3]), list_to_linkedlist([4, 5, 6])]))
+    def merge_2_lists(self, l1, l2):
+        if not l1:
+            return l2
+        if not l2:
+            return l1
+        dummy = head = ListNode()
+        while l1 and l2:
+            val1, val2 = l1.val, l2.val
+            if not (isinstance(val1, int) and isinstance(val2, int)):
+                return None
+            if val1 < val2:
+                dummy.next = l1
+                l1 = l1.next
+            else:
+                dummy.next = l2
+                l2 = l2.next
+            dummy = dummy.next
+        if l1:
+            dummy.next = l1
+        if l2:
+            dummy.next = l2
+        return head.next
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         """
             Merges k sorted linked lists into a single sorted linked list.
@@ -73,7 +96,15 @@ class Solution:
         # sort the list and return the result built into a linked list
         overall_list.sort()
         return list_to_linkedlist(overall_list) if overall_list else None
-    
+    def mergeKLists_2(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
+        if not (lists_to_merge := list(filter(lambda x: x is not None, lists))):
+            return None
+        merged = None
+        for l in lists_to_merge:
+            merged = self.merge_2_lists(merged, l)
+        return merged
+            
+            
 def linkedlist_to_list(node:Optional[ListNode]) -> List[int]:
     """
         Converts a linked list to a Python list.
@@ -186,7 +217,7 @@ def list_to_linkedlist(lst: Optional[List[int]]) -> Optional[ListNode]:
 )
 def test_mergeKLists(lists, expected):
     # Act
-    result = Solution().mergeKLists(lists)
+    result = Solution().mergeKLists_2(lists)
 
     # Assert
     assert linkedlist_to_list(result) == expected
