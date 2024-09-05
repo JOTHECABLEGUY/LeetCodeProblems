@@ -100,10 +100,10 @@ class Solution:
         if not (lists_to_merge := list(filter(lambda x: x is not None, lists))):
             return None
         merged = None
-        for l in lists_to_merge:
-            merged = self.merge_2_lists(merged, l)
-        return merged
-            
+        while len(lists) > 1:
+            merged = self.merge_2_lists(lists[0], lists[1])
+            lists.append(merged)
+            lists = lists[2:]
             
 def linkedlist_to_list(node:Optional[ListNode]) -> List[int]:
     """
