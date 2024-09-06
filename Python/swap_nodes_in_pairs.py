@@ -47,9 +47,23 @@ class ListNode:
         self.next = next
         
 class Solution:
+    
     def test(self):
         return linkedlist_to_list(self.swapPairs(list_to_linkedlist([2, 1, 3])))
+    
     def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        """
+            Swaps every two adjacent nodes in a linked list.
+
+            This function modifies the linked list in place, rearranging the nodes such that each pair of adjacent nodes is swapped. 
+            If the list has an odd number of nodes, the last node remains in its original position.
+
+            Args:
+                head (Optional[ListNode]): The head of the linked list to be modified.
+
+            Returns:
+                Optional[ListNode]: The head of the modified linked list after swapping pairs of nodes.
+        """
         
         # return if the head or following node are empty
         if not head or not head.next:
