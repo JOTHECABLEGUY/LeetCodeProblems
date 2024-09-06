@@ -32,20 +32,6 @@ from typing import List
 class Solution:
     def test(self):
         return self.canFinish(20, [[0,10],[3,18],[5,5],[6,11],[11,14],[13,1],[15,1],[17,4]])
-    def dfs(self, adj_map, course, visited_set):
-        if course in visited_set:
-            return False
-        if not adj_map[course]:
-            return True
-        visited_set.add(course)
-        for prereq in adj_map[course]:
-            if course == prereq:
-                return False
-            if not self.dfs(adj_map, prereq, visited_set):
-                return False
-        adj_map[course] = []
-        visited_set.remove(course)
-        return True
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
         if numCourses <= 0:
             return False
@@ -57,7 +43,21 @@ class Solution:
         adj_map = {c: [] for c in courses}
         for course, prereq in prerequisites:
             adj_map[course].append(prereq)
-        return all(self.dfs(adj_map, course, visited) for course in range(numCourses))
+        def dfs(course):
+            if course in visited:
+                return False
+            if not adj_map[course]:
+                return True
+            visited.add(course)
+            for prereq in adj_map[course]:
+                if course == prereq:
+                    return False
+                if not dfs(prereq):
+                    return False
+            adj_map[course] = []
+            visited.remove(course)
+            return True
+        return all(dfs(course) for course in range(numCourses))
     
 @pytest.mark.parametrize(
     "numCourses, prerequisites, expected",
