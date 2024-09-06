@@ -48,17 +48,29 @@ class ListNode:
         
 class Solution:
     def test(self):
-        return linkedlist_to_list(self.swapPairs(list_to_linkedlist([1, 2, 3, 4])))
+        return linkedlist_to_list(self.swapPairs(list_to_linkedlist([2, 1, 3])))
     def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if not head:
             return None
-        overall_list = linkedlist_to_list(head)
-        for i in range(0, len(overall_list)-1, 2):
-            overall_list[i], overall_list[i+1] = overall_list[i+1], overall_list[i]
-        head = list_to_linkedlist(overall_list)
-        return head
+        index = 1
+        prev_val = head.val
+        res = ListNode()
+        current = res
+        while head:
+            if not index % 2:
+                current.next = ListNode(head.val)
+                current.next.next = ListNode(prev_val)
+                current = current.next.next
+            else:
+                prev_val = head.val
+            head = head.next
+            index += 1
+        if not index % 2:
+            current.next = ListNode(prev_val)
+            
+        return res.next
     
-def linkedlist_to_list(lst:Optional[ListNode]) -> List[int]:
+def linkedlist_to_list(lst:Optional[ListNode]) -> Optional[List[int]]:
     res = []
     while lst:
         res.append(lst.val)
@@ -89,7 +101,7 @@ def list_to_linkedlist(lst:List[int]) -> Optional[ListNode]:
         ([1, 2, 3, 4, 5], [2, 1, 4, 3, 5]),  # odd number of nodes with more than 2 pairs
 
         # Error cases
-        (None, None),                  # None input
+        (None, []),                  # None input
     ],
     ids=[
         "even_number_of_nodes",
