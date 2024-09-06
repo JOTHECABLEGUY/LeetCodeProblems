@@ -50,25 +50,51 @@ class Solution:
     def test(self):
         return linkedlist_to_list(self.swapPairs(list_to_linkedlist([2, 1, 3])))
     def swapPairs(self, head: Optional[ListNode]) -> Optional[ListNode]:
-        if not head:
-            return None
-        index = 1
-        prev_val = head.val
-        res = ListNode()
-        current = res
-        while head:
-            if not index % 2:
-                current.next = ListNode(head.val)
-                current.next.next = ListNode(prev_val)
-                current = current.next.next
-            else:
-                prev_val = head.val
-            head = head.next
-            index += 1
-        if not index % 2:
-            current.next = ListNode(prev_val)
+        
+        # return if the head or following node are empty
+        if not head or not head.next:
+            return head
+        
+        # dummy node to point to start of modified list
+        dummy = ListNode(0)
+        dummy.next = head
+        
+        # tail will be 1 node before current
+        tail = dummy
+        current = head
+        
+        #### EASIER TO EXPLAIN WITH EXAMPLE 2->1->3####
+        # before the loop, the example list looks like: dummy -> 2 -> 1 -> 3
+        #   with pointers dummy to dummy, tail to dummy, and current to node 2
+        # during first iteration:
+        #   temp will point to current.next.next, which is 2.next.next which is node 3
+        #   tail.next = current.next, which makes dummy.next = 2.next, which means dummy -> 1 -> 2 -> 3
+        #   current.next.next = current, meaning 2.next.next = 2, meaning 1.next = 2, linking 1 to 2
+        #       making the list dummy -> 1 -> 2 -> 3
+        #   current.next = temp, meaning 2.next = 3, linking 2 to 3: dummy -> 1 -> 2 -> 3
+        #   tail = current, meaning tail gets reassigned to 2, advancing 2 spaces in the list since 2 was swapped forward
+        #   current = temp, meaning current gets reassigned to 3, advancing 1 space in the list for the next swap
+        
+        # while there are at least 2 nodes remaining 
+        while current and current.next:
             
-        return res.next
+            # get the node 2 ahead of current
+            temp = current.next.next
+            
+            
+            # set node after tail to be the node after current
+            tail.next = current.next
+            
+            # remap the link of the node so that current will come before temp
+            current.next.next = current
+            current.next = temp
+            
+            # step tail and current up for next iteration
+            tail = current
+            current = temp
+        
+        # return the modified list by getting the nodes after dummy
+        return dummy.next
     
 def linkedlist_to_list(lst:Optional[ListNode]) -> Optional[List[int]]:
     res = []
