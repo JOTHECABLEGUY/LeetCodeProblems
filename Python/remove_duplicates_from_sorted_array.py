@@ -43,24 +43,49 @@ Constraints:
 -100 <= nums[i] <= 100
 nums is sorted in non-decreasing order."""
 
-from collections import Counter
 import pytest
 from typing import List
 class Solution:
+    
     def test(self):
         return self.removeDuplicates([1, 1, 2])
+    
     def removeDuplicates(self, nums: List[int]) -> int:
+        """
+            Removes duplicates from a sorted array in place and returns the number of unique elements.
+
+            This function modifies the input list such that the first part of the list contains only unique elements, 
+            and returns the count of these unique elements. The order of the unique elements is preserved.
+
+            Args:
+                nums (List[int]): The sorted list of integers from which duplicates will be removed.
+
+            Returns:
+                int: The number of unique elements in the modified list.
+        """
+        
+        # exit early if the list is empty 
         if not nums:
             return 0
-        prev_num = nums[0]
-        res = [prev_num]
+        
+        # keep track of number of unique elements
+        num_unique = 1
+        
+        # skip first number
         for i in range(1, len(nums)):
-            if nums[i] != prev_num:
-                res.append(nums[i])
-                prev_num = nums[i]
-        length = len(res)
-        nums[:length] = res
-        return length
+            
+            # check that the current number and previous number are different
+            #   if they are, replace the number at the num_unique pointer with a
+            #   number at position i, this ensures that the first k elements will 
+            #   be unique. Increment num_unique
+            #   if they aren't, continue
+            if nums[i] != nums[i-1]:
+                nums[num_unique] = nums[i]
+                num_unique += 1
+            
+        # At the end of the loop, nums will have been modified inplace with the first num_unique numbers being unique
+        return num_unique
+    
 @pytest.mark.parametrize("nums, expected_length, expected_nums", [
     # Happy path tests
     ([1, 1, 2], 2, [1, 2]),  # unique elements
