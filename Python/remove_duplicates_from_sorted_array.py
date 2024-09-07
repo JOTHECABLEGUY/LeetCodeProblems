@@ -52,17 +52,10 @@ class Solution:
     def removeDuplicates(self, nums: List[int]) -> int:
         if not nums:
             return 0
-        res = set()
-        indices_to_pop = []
-        for i in range(len(nums)):
-            if nums[i] not in res:
-                res.add(nums[i])
-            else:
-                indices_to_pop.append(i)
-        for index in indices_to_pop[::-1]:
-            nums.pop(index)
-        return len(res)
-        # return length
+        s = sorted(list(set(nums)))
+        length = len(s)
+        nums[:length] = s
+        return length
 @pytest.mark.parametrize("nums, expected_length, expected_nums", [
     # Happy path tests
     ([1, 1, 2], 2, [1, 2]),  # unique elements
