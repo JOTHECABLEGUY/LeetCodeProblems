@@ -118,7 +118,7 @@ class Solution:
     (["a", "a"], "a"),
     ([], ""),
     (["a"], "a"),
-    (["ab", "adc"], {"abcd", "bcad", "acbd", "cabd", "bacd", "cbad", "abdc", "cbda"}),
+    (["ab", "adc"], {"abcd", "bcad", "acbd", "cabd", "bacd", "cbad", "abdc", "cbda", "bdca", "bdac"}),
 ], ids=[
     "happy_path_1",
     "happy_path_2",
