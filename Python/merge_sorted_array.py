@@ -41,30 +41,27 @@ import pytest
 from typing import List
 class Solution:
     def test(self):
-        nums1 = [1, 2, 4, 5, 6, 0]
-        nums2 = [2, 4, 6]
+        nums1 = [0]
+        nums2 = [1]
         n = len(nums2)
         m = len(nums1) - n
-        self.merge(nums1, 5, [3], 1)
+        self.merge(nums1, m, nums2, n)
         return nums1
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
         """
         Do not return anything, modify nums1 in-place instead.
         """
-        left, right = 0, 0
-        res = []
-        while left < m and right < n:
-            if nums1[left] <= nums2[right]:
-                res.append(nums1[left])
-                left += 1
+        left, right, insertion_point = m - 1, n - 1, m + n - 1
+        while left >= 0 and right >= 0:
+            if nums2[right] >= nums1[left]:
+                nums1[insertion_point] = nums2[right]
+                right -= 1
             else:
-                res.append(nums2[right])
-                right += 1
-        if left < m:
-            res.extend(nums1[left:m])
-        elif right < n:
-            res.extend(nums2[right:])
-        nums1[:m+n] = res
+                nums1[insertion_point] = nums1[left]
+                left -= 1
+            insertion_point -= 1
+        if right >= 0:
+            nums1[:insertion_point+1] = nums2[:right+1]
 
 @pytest.mark.parametrize(
     "nums1, m, nums2, n, expected",
