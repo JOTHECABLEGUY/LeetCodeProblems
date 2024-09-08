@@ -36,23 +36,40 @@ digits does not contain any leading 0's"""
 
 import pytest
 from typing import List
+
 class Solution:
+    
     def test(self):
         return self.plusOne([1, 2, 3])
+    
     def plusOne(self, digits: List[int]) -> List[int]:
-        res = []
-        c = 1
-        for num in digits[::-1]:
-            num = num + c
-            if num == 10:
-                res.append(0)
-                c = 1
-            else:
-                res.append(num)
-                c = 0
-        if c:
-            res.append(c)
-        return res[::-1]
+        """
+            Increments a number represented as an array of digits by one.
+
+            This function takes a list of integers where each integer represents a single digit of a number, 
+            and adds one to the number. It handles carrying over when digits exceed 9 and returns the updated list of digits.
+
+            Args:
+                digits (List[int]): A list of integers representing the digits of the number.
+
+            Returns:
+                List[int]: The list of integers representing the digits of the incremented number.
+        """
+        # start at rightmost digit
+        for i in range(len(digits)-1, -1, -1):
+
+            # if no carrying needs to be done, return the result with 1 added
+            if digits[i] < 9:
+                digits[i] += 1
+                return digits
+
+            # carrying will need to be done, set the current to 0 and iterate, as that add 1 to the next position anyways
+            digits[i] = 0
+
+        # if it doesn't return by the end of iteration, final carry needs to be done, so insert a 1 at the beginning of the list and return
+        digits.insert(0, 1)
+        return digits
+    
 @pytest.mark.parametrize(
     "digits, expected",
     [
@@ -85,5 +102,6 @@ def test_plusOne(digits, expected):
 
     # Assert
     assert result == expected
+    
 if __name__ == "__main__":
     print(Solution().test())
