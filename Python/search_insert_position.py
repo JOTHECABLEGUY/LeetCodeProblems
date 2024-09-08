@@ -32,6 +32,61 @@ class Solution:
     def test(self):
         return self.searchInsert([1, 3, 5, 6], 7) # returns 4
     
+    def searchInsert_3(self, nums: List[int], target: int) -> int:
+        """
+            Finds the index at which a target value should be inserted into a sorted list using binary search.
+
+            This function iteratively narrows down the search range to locate the target value. 
+            If the target is found, its index is returned; if not, the index where it can be inserted to maintain sorted order is returned.
+
+            Args:
+                nums (List[int]): A sorted list of integers in which to search for the target.
+                target (int): The integer value to search for in the list.
+
+            Returns:
+                int: The index at which the target value is found or should be inserted.
+        """
+        
+        # set pointers to window boundaries
+        l, r = 0, len(nums)-1
+        
+        # until they pass each other
+        while l <= r:
+            
+            # get middle of the window
+            mid = (l+r)//2
+            
+            # if target is in the middle of the window, return the middle, otherwise reduce the window 
+            #   to the left or right side of middle depending on where target is expected to appear
+            if nums[mid] == target:
+                return mid
+            elif nums[mid] > target:
+                r = mid - 1
+            else:
+                l = mid + 1
+        
+        # if the target was never found, use the more recent left boundary to determine where to insert
+        return l
+    
+    def searchInsert_2(self, nums: List[int], target: int) -> int:
+        """
+            Determines the index at which a target value should be inserted into a sorted list.
+
+            This function uses a generator expression to find the first index where the value in the list is greater than or equal to the target. 
+            If no such index exists, it returns the length of the list, indicating that the target should be appended at the end.
+
+            Args:
+                nums (List[int]): A sorted list of integers in which to search for the target.
+                target (int): The integer value to search for in the list.
+
+            Returns:
+                int: The index at which the target value is found or should be inserted.
+        """
+        
+        # build an iterator that produces the index of where the target should be, return the next index,
+        #   or if there is no index that has a value equal to or greater than the value, return the length of the input array
+        return next((i for i in range(len(nums)) if nums[i] >= target), len(nums))
+    
     def searchInsert(self, nums: List[int], target: int) -> int:
         """
             Searches for the index at which a target value should be inserted into a sorted list.
@@ -123,7 +178,7 @@ class Solution:
 )
 def test_searchInsert(nums, target, expected):
     # Act
-    result = Solution().searchInsert(nums, target)
+    result = Solution().searchInsert_3(nums, target)
 
     # Assert
     assert result == expected
@@ -144,7 +199,7 @@ def test_searchInsert(nums, target, expected):
 )
 def test_searchInsert_Exception(nums, target, expected):
         with pytest.raises(expected):
-            Solution().searchInsert(nums, target)
+            Solution().searchInsert_3(nums, target)
             
 if __name__ == "__main__":
     print(Solution().test())
