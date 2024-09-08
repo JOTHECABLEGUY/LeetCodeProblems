@@ -33,18 +33,17 @@ class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:
         if not isinstance(nums, list) or not isinstance(target, int):
             raise TypeError
-        
+
         if not nums:
             return 0
 
         def bin_search(start, stop):
             if stop-start <= 1:
-                if target not in nums[start:stop]:
-                    return stop if target > nums[stop-1] else (start+stop) // 2
-                elif target == nums[start]:
+                if target == nums[start]:
                     return start
-                elif target == nums[stop]:
+                if target == nums[stop-1]:
                     return stop
+                return stop if target > nums[stop-1] else start
             mid = (start + stop)//2
             return bin_search(mid, stop) if target >= nums[mid] else bin_search(0, mid)
 
