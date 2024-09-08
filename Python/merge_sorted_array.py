@@ -61,10 +61,7 @@ class Solution:
                 res.append(nums2[right])
                 right += 1
         if left < m:
-            if n:
-                res.extend(nums1[left:-n])
-            else:
-                res.extend(nums1[left:])
+            res.extend(nums1[left:m])
         elif right < n:
             res.extend(nums2[right:])
         nums1[:m+n] = res
