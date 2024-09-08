@@ -49,17 +49,44 @@ class Solution:
         return nums1
     def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:
         """
-        Do not return anything, modify nums1 in-place instead.
+            Merges two sorted integer arrays into one sorted array in-place.
+
+            This function takes two sorted arrays, nums1 and nums2, and merges them into nums1, which has enough space to hold the combined elements. 
+            The function modifies nums1 directly, ensuring that the final result is a single sorted array.
+
+            Args:
+                nums1 (List[int]): The first sorted array, which has a size of m + n, where the last n elements are empty.
+                m (int): The number of valid elements in nums1.
+                nums2 (List[int]): The second sorted array with n elements.
+                n (int): The number of valid elements in nums2.
+
+            Returns:
+                None: This function modifies nums1 in-place and does not return a value.
         """
+        
+        # pointers for current positions in nums1 and nums2, as well as current position to insert result of comparison
         left, right, insertion_point = m - 1, n - 1, m + n - 1
+        
+        # while there are elements to compare from both lists
         while left >= 0 and right >= 0:
+            
+            # if the number in nums2 is bigger or equal to the number in nums1, 
+            #   add the nums2 number to the insertion point, decrement right pointer
             if nums2[right] >= nums1[left]:
                 nums1[insertion_point] = nums2[right]
                 right -= 1
+            # if the number in nums1 is bigger than the number in nums2, 
+            #   add the nums1 number to the insertion point, decrement left pointer
             else:
                 nums1[insertion_point] = nums1[left]
                 left -= 1
+            
+            # both branches insert a value at the rightmost index, so decrement boundary for next insertion
             insertion_point -= 1
+        
+        # if any values have not been processed in nums2, insert all values into the beginning of nums1
+        #   no need to consider nums1 value as they are already present in the array in the proper
+        #   order if nums2 gets exhausted before nums1
         if right >= 0:
             nums1[:insertion_point+1] = nums2[:right+1]
 
