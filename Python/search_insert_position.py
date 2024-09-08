@@ -77,18 +77,18 @@ class Solution:
             # if window size reaches one (base case)
             if stop-start == 1:
                 
-                # if the first (only) value in the window is target, return start as the index
-                if target == nums[start]:
-                    return start
-                
                 # other wise check where the value would fall and return the boundary depending on the value available
                 return stop if target > nums[start] else start
             
             # when the base case is not met, the new middle point is the halfway point between the boundaries of the window
-            mid = (start + stop)//2
+            mid = start + (stop-start)//2
+            
+            # if the new midpoint is the location of the target, return it
+            if nums[mid] == target:
+                return mid
             
             # depending on where target should be, recursively search either to the left or right of the mid point
-            return bin_search(mid, stop) if target >= nums[mid] else bin_search(0, mid)
+            return bin_search(mid, stop) if target > nums[mid] else bin_search(0, mid)
 
         # search for the value within the whole list
         return bin_search(0, len(nums))
