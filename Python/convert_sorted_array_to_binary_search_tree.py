@@ -35,28 +35,62 @@ class TreeNode:
         self.val = val
         self.left = left
         self.right = right
+        
 class Solution:
+    
     def test(self):
         return self.sortedArrayToBST([1, 2, 3, 4, 5, 6, 7])
+    
     def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
+        """
+            Converts a sorted array into a height-balanced binary search tree.
+
+            This function takes a sorted list of integers and recursively constructs a binary search tree (BST) 
+            such that the tree is height-balanced. The middle element of the array becomes the root, and the left 
+            and right subarrays are used to create the left and right subtrees, respectively.
+
+            Args:
+                nums (List[int]): A sorted list of integers to be converted into a binary search tree.
+
+            Returns:
+                Optional[TreeNode]: The root node of the constructed height-balanced binary search tree, 
+                                    or None if the input list is empty.
+        """
+        
+        # if the input array is empty or None, return None
         if not nums:
             return None
-        def buildTree(start, stop):
-            print(start, stop)
-            if start >= stop:
-                return None
-            if stop-start == 1:
-                return TreeNode(nums[start])
-            mid = (start + stop) // 2
-            node = TreeNode(nums[mid])
-            node.left = buildTree(start, mid)
-            node.right = buildTree(mid+1, stop)
-            return node
-        root = buildTree(0, len(nums))
+        
+        # if there is only 1 element, return the single element as a node
+        if len(nums) == 1:
+            return TreeNode(nums[0])
+        
+        # create a new root using the middle of the list
+        mid = len(nums) // 2
+        root = TreeNode(nums[mid])
+        
+        # get the subtrees on each side of the new root, dividing the input list further
+        root.left = self.sortedArrayToBST(nums[:mid])
+        root.right = self.sortedArrayToBST(nums[mid+1:])
+        
+        # return the root once each subtree is complete, completing each recursive call 
+        #   until the first, which returns the root of the whole tree
         return root
 
-def inorder(tree):
+def inorder(tree: Optional[TreeNode]) -> List[int]:
+    """
+    Method to traverse a Tree in 'inorder' order , left subtree -> root -> right subtree 
+    (i.e sorted from smallest to highest)
+
+    Args:
+        tree (Optional[TreeNode]): tree to traverse, or None
+
+    Returns:
+        List[int]: list of integers representing the input tree in the above mentioned order, can be empty
+                    if a null tree was provided
+    """
     return inorder(tree.left) + [tree.val] + inorder(tree.right) if tree else []
+
 @pytest.mark.parametrize(
     "nums, expected",
     [
