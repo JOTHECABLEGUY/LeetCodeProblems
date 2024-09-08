@@ -21,20 +21,48 @@ import pytest
 from typing import List
 
 class Solution:
+    
     def test(self):
         return self.generate(5)
+    
     def generate(self, numRows: int) -> List[List[int]]:
+        """
+            Generates Pascal's triangle up to a specified number of rows.
+
+            This function constructs Pascal's triangle, where each row represents the coefficients of the binomial expansion. 
+            The triangle is built iteratively, with each element being the sum of the two elements directly above it in the previous row.
+
+            Args:
+                numRows (int): The number of rows of Pascal's triangle to generate.
+
+            Returns:
+                List[List[int]]: A list of lists representing the rows of Pascal's triangle, 
+                                or an empty list if the input is invalid or less than 1.
+        """
+    
+        # exit early if an invalid number or rows was given
         if not numRows or numRows < 1:
             return []
+        
+        # base cases where there are no pairs to sum
         if numRows == 1:
             return [[1]]
         elif numRows == 2:
             return [[1], [1, 1]]
+        
+        # prefill with n = 1 and n = 2 rows
         res = [[1], [1, 1]]
+        
+        # starting from 2 since 0 and 1 are already done
         for i in range(2, numRows):
+            
+            # get middle by summing all pairs in the previous row
             middle = [res[i-1][x] + res[i-1][x+1] for x in range(i-1)]
+            
+            # add the middle with 1s on both sides to the list of rows
             res.append([1] + middle + [1])
         
+        # return the result
         return res
     
 @pytest.mark.parametrize("numRows, expected", [
