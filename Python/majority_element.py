@@ -23,7 +23,7 @@ n == nums.length
 Follow-up: Could you solve the problem in linear time and in O(1) space?"""
 
 import pytest
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import List
 class Solution:
     
@@ -36,6 +36,18 @@ class Solution:
         c = Counter(nums)
         mc = c.most_common(1)[0]
         return mc[0] if mc[1] > len(nums)//2 else 0
+    
+    def majorityElement_2(self, nums: List[int]) -> int:
+        if not nums:
+            return 0
+        m = defaultdict(int)
+        half = len(nums)//2 
+        for num in nums:
+            m[num] += 1
+            if m[num] > half:
+                return num
+        return 0
+                
     
 @pytest.mark.parametrize(
     "nums, expected",
@@ -61,7 +73,7 @@ class Solution:
 )
 def test_majorityElement(nums, expected):
     # Act
-    result = Solution().majorityElement(nums)
+    result = Solution().majorityElement_2(nums)
     
     # Assert
     assert result == expected
