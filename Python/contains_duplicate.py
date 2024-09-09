@@ -35,6 +35,8 @@ Constraints:
 1 <= nums.length <= 105
 -109 <= nums[i] <= 109"""
 
+from functools import reduce
+from operator import xor
 import pytest
 from typing import List
 
@@ -44,7 +46,30 @@ class Solution:
         return self.containsDuplicate([1, 1, 2])
     
     def containsDuplicate(self, nums: List[int]) -> bool:
-        return len(nums) != len(set(nums)) if nums else False
+        """
+            Determine if a list contains any duplicate elements.
+
+            This function checks if there are any numbers in the provided list that appear more than once. 
+            It returns True if duplicates are found, and False if all elements are unique.
+
+            Args:
+                nums (List[int]): A list of integers to check for duplicates.
+
+            Returns:
+                bool: True if duplicates exist, otherwise False.
+        """
+        
+        # set to hold already visited elements
+        seen = set()
+        
+        # check if each number is in the set. If it is, return, otherwise add to the set and continue
+        for n in nums:
+            if n in seen:
+                return True
+            seen.add(n)
+        
+        # return False since the loop did not return True
+        return False
 
 @pytest.mark.parametrize(
     "nums, expected",
