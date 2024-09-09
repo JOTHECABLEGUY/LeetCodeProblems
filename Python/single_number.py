@@ -24,7 +24,7 @@ Constraints:
 -3 * 104 <= nums[i] <= 3 * 104
 Each element in the array appears twice except for one element which appears only once."""
 
-from collections import defaultdict
+from collections import Counter, defaultdict
 import pytest
 from typing import List
 
@@ -34,13 +34,11 @@ class Solution:
         return self.singleNumber([1, 1, 2, 2, 3])
     
     def singleNumber(self, nums: List[int]) -> int:
-        m = defaultdict(int)
-        for i in nums:
-            m[i] += 1
-        for e, v in m.items():
-            if v == 1:
-                return e
-        return 0
+        if not nums:
+            return 0
+        c = Counter(nums)
+        least_common = c.most_common()[-1]
+        return least_common[0] if c and least_common[1] == 1 else 0
 
 @pytest.mark.parametrize(
     "nums, expected",
