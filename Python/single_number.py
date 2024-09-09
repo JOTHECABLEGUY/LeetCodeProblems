@@ -1,0 +1,81 @@
+"""136. Single Number
+Easy
+Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+
+Example 1:
+
+Input: nums = [2,2,1]
+Output: 1
+Example 2:
+
+Input: nums = [4,1,2,1,2]
+Output: 4
+Example 3:
+
+Input: nums = [1]
+Output: 1
+
+Constraints:
+
+1 <= nums.length <= 3 * 104
+-3 * 104 <= nums[i] <= 3 * 104
+Each element in the array appears twice except for one element which appears only once."""
+
+from collections import defaultdict
+import pytest
+from typing import List
+
+class Solution:
+    
+    def test(self):
+        return self.singleNumber([1, 1, 2, 2, 3])
+    
+    def singleNumber(self, nums: List[int]) -> int:
+        m = defaultdict(int)
+        for i in nums:
+            m[i] += 1
+        for e, v in m.items():
+            if v == 1:
+                return e
+        return 0
+
+@pytest.mark.parametrize(
+    "nums, expected",
+    [
+        # Happy path tests
+        ([2, 2, 1], 1),  # Single number is 1
+        ([4, 1, 2, 1, 2], 4),  # Single number is 4
+        ([1], 1),  # Single number is 1 in a single-element list
+
+        # Edge cases
+        ([0, 0, 0, 1], 1),  # Single number is 1 with multiple zeros
+        ([1, 1, 2, 2, 3], 3),  # Single number is 3 at the end
+        ([1, 2, 2, 3, 3], 1),  # Single number is 1 at the beginning
+
+        # Error cases
+        ([], 0),  # Empty list should return 0
+        ([1, 1, 1, 1], 0),  # No single number, should return 0
+    ],
+    ids=[
+        "single_number_1",
+        "single_number_4",
+        "single_element_list",
+        "multiple_zeros",
+        "single_number_at_end",
+        "single_number_at_beginning",
+        "empty_list",
+        "no_single_number"
+    ]
+)
+def test_singleNumber(nums, expected):
+    # Act
+    result = Solution().singleNumber(nums)
+
+    # Assert
+    assert result == expected
+
+if __name__ == "__main__":
+    print(Solution().test())
