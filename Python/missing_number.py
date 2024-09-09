@@ -36,12 +36,31 @@ class Solution:
         return self.missingNumber([0, 1, 2, 3, 5])
     
     def missingNumber(self, nums: List[int]) -> Optional[int]:
-        s = set(range(len(nums) + 1))
-        if len(set(nums)) != len(nums) or (nums and max(nums) not in s):
-            return None 
-        for num in nums:
-            s.remove(num)
-        return s.pop()
+        """
+            Find the missing number in a list of integers from 0 to n.
+
+            This function calculates the missing number in a sequence of integers that should 
+            range from 0 to n, where one number is absent. It uses the formula for the sum of 
+            the first n natural numbers to determine the missing value.
+
+            Args:
+                nums (List[int]): A list of integers containing n distinct numbers in the range [0, n].
+
+            Returns:
+                int: The missing number from the list.
+
+        """
+
+        # get numbers to sum
+        n = len(nums)
+        
+        # check if there are duplicates or more than 1 missing value (more than 1 missing value is only caught when 
+        #   the maximum value in the list is above the length of the list)
+        if len(set(nums)) != len(nums) or (nums and max(nums) > n):
+            return None
+        
+        # return sum of first n natural numbers minus the sum of the numbers provided
+        return n*(n+1)//2 - sum(nums)
 
 @pytest.mark.parametrize(
     "nums, expected",
