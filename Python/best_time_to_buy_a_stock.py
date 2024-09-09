@@ -33,17 +33,39 @@ class Solution:
         return self.maxProfit([1, 2, 3, 4, 5, 6, 8] )# list(range(1, 10000))[::-1] + [0]*10000)
     
     def maxProfit(self, prices: List[int]) -> int:
+        """
+            Calculate the maximum profit from buying and selling a stock given a list of prices.
+
+            This function evaluates the prices of a stock over time and determines the best possible profit 
+            that can be achieved by buying at a low price and selling at a higher price later. If no profit 
+            can be made, it returns zero.
+
+            Args:
+                prices (List[int]): A list of integers representing the stock prices on different days.
+
+            Returns:
+                int: The maximum profit that can be achieved. Returns 0 if no profit is possible.
+
+            Raises:
+                ValueError: If prices is not a list of integers.
+        """
+        
+        # exit early if no profit can be obtained
         if not prices or len(prices) == 1:
             return 0
+        
+        # the cheapest price seen is the first element in the list, max profit is 0
         cheapest_so_far, max_profit = prices[0], 0
         
-        for i in range(1, len(prices)):
-            if prices[i] < cheapest_so_far:
-                cheapest_so_far = prices[i]
-                continue
-            if prices[i] - cheapest_so_far > max_profit:
-                max_profit = prices[i]- cheapest_so_far
-                
+        # check each price, if it is cheaper than anything we have seen, update the window. 
+        #   If the current window gives a better profit than anything before it, update the max profit
+        for p in prices:
+            if p < cheapest_so_far:
+                cheapest_so_far = p
+            elif p - cheapest_so_far > max_profit:
+                max_profit = p- cheapest_so_far
+        
+        # return the max profit
         return max_profit
 
 @pytest.mark.parametrize(
