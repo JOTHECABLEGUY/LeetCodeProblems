@@ -35,8 +35,6 @@ Constraints:
 1 <= nums.length <= 105
 -109 <= nums[i] <= 109"""
 
-from functools import reduce
-from operator import xor
 import pytest
 from typing import List
 
