@@ -34,11 +34,32 @@ class Solution:
         return self.singleNumber([1, 1, 2, 2, 3])
     
     def singleNumber(self, nums: List[int]) -> int:
+        """
+            Find the single number in a list where every other number appears twice.
+
+            This function identifies the number that appears exactly once in the provided list of integers. 
+            If no such number exists or the list is empty, it returns zero.
+
+            Args:
+                nums (List[int]): A list of integers where every number except one appears twice.
+
+            Returns:
+                int: The single number that appears once, or 0 if no such number exists.
+        """
+        
+        # exit if the list is not valid
         if not nums:
             return 0
+        
+        # create a counter object for the numbers
         c = Counter(nums)
+        
+        # the least common element will be at the end of a list of the most common
         least_common = c.most_common()[-1]
-        return least_common[0] if c and least_common[1] == 1 else 0
+        
+        # if the counter's least common element has the required count of 1, we can 
+        #   return the least common element, otherwise return 0
+        return least_common[0] if least_common[1] == 1 else 0
 
 @pytest.mark.parametrize(
     "nums, expected",
