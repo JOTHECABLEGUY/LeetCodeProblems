@@ -37,22 +37,23 @@ class NumArray:
     def __init__(self, nums: List[int]):
         self.data = nums
         n = len(nums)
-        print(len(nums))
-        self.cache = [[0] * n for _ in range(n)]
-        for i in range(n):
-            for j in range(i, n):
-                self.cache[i][j] = self.cache[i][j-1] + nums[j]
+        self.cache = {}
+        for i, num in enumerate(nums):
+            self.cache[i] = [num]
+        for start in range(n):
+            for end in range(start+1, n):
+                self.cache[start].append(self.cache[start][-1] + nums[end])
 
     def sumRange(self, left: int, right: int) -> int:
         if left < 0 or right >= len(self.data) or left > right or left > len(self.data):
             raise IndexError
-        return self.data[left] if left == right else self.cache[left][right]
+        return self.cache[left][right-left]
 
 def t():
-    obj = NumArray([1,4,-6])
+    obj = NumArray([-2,0,3,-5,2,-1])
     print(obj.sumRange(0, 2))
-    print(obj.sumRange(1, 2))
-    return obj.sumRange(0, 1)
+    print(obj.sumRange(2, 5))
+    return obj.sumRange(0, 5)
 
 
 obj = NumArray([1, 2, 3, 4, 5])
