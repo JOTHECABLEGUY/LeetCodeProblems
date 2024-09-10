@@ -35,19 +35,40 @@ class Solution:
     
     def moveZeroes(self, nums: List[int]) -> None:
         """
-        Do not return anything, modify nums in-place instead.
+            Move all zeroes in the list to the end while maintaining the order of non-zero elements.
+
+            This function modifies the input list in-place by shifting all non-zero elements to the front 
+            and filling the remaining positions with zeroes. It handles cases where the list is empty, 
+            contains only zeroes, or contains no zeroes.
+
+            Args:
+                nums (List[int]): A list of integers that may contain zeroes.
+
+            Returns:
+                None: The function modifies the input list in-place and does not return a value.
         """
+
+        # exit early if an empty list was given or the list is all zeroes or all non-zeroes
         if not nums:
             return
         if not any(nums) or all(nums):
             return
-        n = len(nums)
-        count = 0
-        for index in range(n):
-            while index < len(nums) and nums[index] == 0:
-                count += 1
-                nums.pop(index)
-        nums.extend([0]*count)
+        
+        # index to insert next non-zero
+        last_non_zero_found_position = 0
+        
+        # for each number in the list, if it is not zero, move it to the insertion index and increment the index
+        for num in nums:
+            if num != 0:
+                nums[last_non_zero_found_position] = num
+                last_non_zero_found_position += 1
+        
+        # at the end of the loop, only thing left is to overwrite the non-zeroes at the end to 0s
+        #   get the number of zeroes to insert using the length of the input list - the position where 
+        #   the next non-zero would be inserted. Replace the end of the list with the required
+        #   number of 0s using slicing
+        num_zeroes = len(nums) - last_non_zero_found_position
+        nums[last_non_zero_found_position:] = [0]*num_zeroes
 
 @pytest.mark.parametrize(
     "nums, expected",
