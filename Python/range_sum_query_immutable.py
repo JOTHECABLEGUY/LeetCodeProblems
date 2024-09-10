@@ -36,16 +36,88 @@ class NumArray:
 
     def __init__(self, nums: List[int]):
         self.data = nums
-        self.cache = {}
+        n = len(nums)
+        print(len(nums))
+        self.cache = [[0] * n for _ in range(n)]
+        for i in range(n):
+            for j in range(i, n):
+                self.cache[i][j] = self.cache[i][j-1] + nums[j]
 
     def sumRange(self, left: int, right: int) -> int:
-        params = frozenset({left, right})
-        if params not in self.cache:
-            result = sum(self.data[left:right+1])
-            self.cache[params] = result
-            return result
-        return self.cache[params]
+        if left < 0 or right >= len(self.data) or left > right or left > len(self.data):
+            raise IndexError
+        return self.data[left] if left == right else self.cache[left][right]
+
+def t():
+    obj = NumArray([1,4,-6])
+    print(obj.sumRange(0, 2))
+    print(obj.sumRange(1, 2))
+    return obj.sumRange(0, 1)
+
+
+obj = NumArray([1, 2, 3, 4, 5])
+class TestSumRange:
+
+    @pytest.mark.parametrize("left, right, expected", [
+        (0, 2, 6),  # happy path
+        (1, 3, 9),  # happy path
+        (0, 4, 15),  # happy path
+        (2, 2, 3),  # edge case: single element
+        (0, 0, 1),  # edge case: single element
+        (4, 4, 5),  # edge case: single element
+    ], ids=[
+        "sum_0_to_2",
+        "sum_1_to_3",
+        "sum_0_to_4",
+        "sum_2_to_2",
+        "sum_0_to_0",
+        "sum_4_to_4",
+    ])
+    def test_sum_range(self, left, right, expected):
         
+        # Act
+        result = obj.sumRange(left, right)
+        
+        # Assert
+        assert result == expected
+
+    @pytest.mark.parametrize("left, right, expected", [
+        (0, 2, 6),  # cache hit
+        (1, 3, 9),  # cache hit
+    ], ids=[
+        "cache_hit_0_to_2",
+        "cache_hit_1_to_3",
+    ])
+    def test_sum_range_cache(self, left, right, expected):
+        
+        # Arrange
+        obj.sumRange(left, right)  # populate cache
+        
+        # Act
+        result = obj.sumRange(left, right)
+        
+        # Assert
+        assert result == expected
+
+    @pytest.mark.parametrize("left, right", [
+        (-1, 2),  # error case: negative index
+        (1, 5),  # error case: right index out of bounds
+        (5, 5),  # error case: left index out of bounds
+        (3, 2),  # error case: left > right
+    ], ids=[
+        "negative_index",
+        "right_index_out_of_bounds",
+        "left_index_out_of_bounds",
+        "left_greater_than_right",
+    ])
+    def test_sum_range_errors(self, left, right):
+        
+        # Act & Assert
+        with pytest.raises(IndexError):
+            obj.sumRange(left, right)
+
+if __name__ == "__main__":
+    print(t())
 
 
 # Your NumArray object will be instantiated and called as such:
