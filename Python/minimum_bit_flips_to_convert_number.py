@@ -37,12 +37,40 @@ class Solution:
         return self.minBitFlips(-1, 1)
     
     def minBitFlips(self, start: int, goal: int) -> int:
+        """
+            Calculate the minimum number of bit flips to convert start to goal.
+
+            This method compares the binary representations of two integers and 
+            counts the number of bits that differ. It continues until both integers 
+            are reduced to zero.
+
+            Args:
+                start (int): The starting integer.
+                goal (int): The target integer to convert to.
+
+            Returns:
+                int: The minimum number of bit flips required to convert start to goal.
+        """
+        
+        # catch any negative numbers, as this approach causes an infinite loop if a negative number is given 
+        if start < 0 or goal < 0:
+            return 32
+        
+        # variable to hold number of bits to flip
         num_flips = 0
+        
+        # while there is still a comparison to make
         while start or goal:
+            
+            # take the rightmost bit and compare both, if they are different, then increment the flip counter
             if start % 2 != goal % 2:
                 num_flips += 1
+            
+            # remove the last bit
             start //= 2
             goal //= 2
+        
+        # return the number of bits to flip
         return num_flips
 
 @pytest.mark.parametrize(
