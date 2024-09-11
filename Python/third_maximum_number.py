@@ -40,19 +40,50 @@ import pytest
 from typing import List
 
 class Solution:
+    
     def test(self):
         return self.thirdMax([1, 2, 2, 3])
+    
     def thirdMax(self, nums: List[int]) -> int:
+        """
+            Find the third maximum number in a list of integers.
+
+            This method returns the third distinct maximum number from a list of integers. 
+            If there are fewer than three distinct numbers, it returns the maximum number instead.
+
+            Args:
+                nums (List[int]): A list of integers.
+
+            Returns:
+                int: The third distinct maximum number or the maximum number if there are 
+                fewer than three distinct numbers.
+        """
+        
+        # max size of heap
         k = 3
+        
+        # get the set to remove duplicates
         n = set(nums)
+        
+        # if there are not k distinct elements, return the max of the max
         if len(n) < k:
             return max(n)
+        
+        # build the heap
         heap = []
         for num in n:
+            
+            # if there aren't k elements in the heap yet, just push the current number
             if len(heap) < k:
                 heapq.heappush(heap, num)
+                
+            # if there are k elements in the heap, check if the current element is greater than the top of the heap (current
+            #   kth greatest). If it is, pop that element and add the new one to the heap. the heap will handle the placement
+            #   and the top of the heap will now be the kth largest
             elif num > heap[0]:
                 heapq.heapreplace(heap, num)
+        
+        # return the top of the heap
         return heapq.heappop(heap)
 
 @pytest.mark.parametrize(
