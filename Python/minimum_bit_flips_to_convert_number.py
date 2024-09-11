@@ -30,15 +30,20 @@ Constraints:
 0 <= start, goal <= 109"""
 
 import pytest
-from operator import xor
 
 class Solution:
     
     def test(self):
-        return self.minBitFlips(-2, 1)
+        return self.minBitFlips(-1, 1)
     
     def minBitFlips(self, start: int, goal: int) -> int:
-        return bin(start^goal).count('1')
+        num_flips = 0
+        while start or goal:
+            if start % 2 != goal % 2:
+                num_flips += 1
+            start //= 2
+            goal //= 2
+        return num_flips
 
 @pytest.mark.parametrize(
     "start, goal, expected",
