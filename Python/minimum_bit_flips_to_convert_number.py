@@ -35,17 +35,46 @@ from operator import xor
 class Solution:
     
     def test(self):
-        return self.minBitFlips(7, 10)
+        return self.minBitFlips(-2, 1)
     
     def minBitFlips(self, start: int, goal: int) -> int:
-        # print(bin(start), bin(goal))
-        b_s, b_g = bin(start)[2:], bin(goal)[2:]
-        # print(len(b_s) + len(b_g) - len(b_s))
-        b_s = b_s.zfill(len(b_s) + len(b_g) - len(b_s))
-        # print(len(b_g) + len(b_s) - len(b_g))
-        b_g = b_g.zfill(len(b_g) + len(b_s) - len(b_g))
-        # print(sum(int(s) ^ int(g) for s, g in zip(b_s, b_g)))
-        return sum(int(s) ^ int(g) for s, g in zip(b_s, b_g))
-    
+        return bin(start^goal).count('1')
+
+@pytest.mark.parametrize(
+    "start, goal, expected",
+    [
+        # Happy path tests
+        (10, 20, 4),  # Different bits in binary representation
+        (0, 0, 0),    # No flips needed
+        (1, 2, 2),    # Single bit difference
+
+        # Edge cases
+        (0, 1, 1),    # Smallest non-zero flip
+        (2**31-1, 0, 31),  # Maximum 32-bit integer to zero
+        (0, 2**31-1, 31),  # Zero to maximum 32-bit integer
+
+        # Error cases
+        (-1, 1, 32),  # Negative number to positive
+        (1, -1, 32),  # Positive number to negative
+    ],
+    ids=[
+        "happy_path_10_to_20",
+        "happy_path_0_to_0",
+        "happy_path_1_to_2",
+        "edge_case_0_to_1",
+        "edge_case_max_int_to_0",
+        "edge_case_0_to_max_int",
+        "error_case_neg1_to_1",
+        "error_case_1_to_neg1",
+    ]
+)
+def test_minBitFlips(start, goal, expected):
+
+    # Act
+    result = Solution().minBitFlips(start, goal)
+
+    # Assert
+    assert result == expected
+
 if __name__ == "__main__":
     print(Solution().test())
