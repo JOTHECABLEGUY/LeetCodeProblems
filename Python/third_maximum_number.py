@@ -36,16 +36,24 @@ Constraints:
 Follow up: Can you find an O(n) solution?"""
 
 import heapq
-from queue import PriorityQueue
 import pytest
 from typing import List
 
 class Solution:
     def test(self):
-        return self.thirdMax([1, 2, 3])
+        return self.thirdMax([1, 2, 2, 3])
     def thirdMax(self, nums: List[int]) -> int:
-        n = sorted(list(set(nums)))
-        return n[-3] if len(n) >= 3 else n[-1]
+        k = 3
+        n = set(nums)
+        if len(n) < k:
+            return max(n)
+        heap = []
+        for num in n:
+            if len(heap) < k:
+                heapq.heappush(heap, num)
+            elif num > heap[0]:
+                heapq.heapreplace(heap, num)
+        return heapq.heappop(heap)
 
 @pytest.mark.parametrize(
     "nums, expected",
