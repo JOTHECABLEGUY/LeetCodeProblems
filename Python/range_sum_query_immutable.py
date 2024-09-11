@@ -35,19 +35,45 @@ from typing import List
 class NumArray:
 
     def __init__(self, nums: List[int]):
+        
+        # initialize the data for the class with the input list
         self.data = nums
-        n = len(nums)
-        self.cache = {}
-        for i, num in enumerate(nums):
-            self.cache[i] = [num]
-        for start in range(n):
-            for end in range(start+1, n):
-                self.cache[start].append(self.cache[start][-1] + nums[end])
+        
+        # copy the numbers into the cache list
+        self.cache = nums[:]
+        
+        # for each number, replace the position in the cache list with the sum of the first n numbers in the list
+        for i in range(1, len(nums)):
+            self.cache[i] = self.cache[i-1] + nums[i]
 
     def sumRange(self, left: int, right: int) -> int:
+        """
+            Calculate the sum of a range of numbers in a cached array.
+
+            This method computes the sum of elements between the specified indices, 
+            leveraging a cached sum for efficiency. It raises an IndexError if the 
+            provided indices are out of bounds or invalid.
+
+            Args:
+                left (int): The starting index of the range (inclusive).
+                right (int): The ending index of the range (inclusive).
+
+            Returns:
+                int: The sum of the elements from index left to right.
+
+            Raises:
+                IndexError: If left or right indices are out of bounds or invalid.
+        """
+        
+        # if the indices given would cause an invalid operation/index error, raise an index error
         if left < 0 or right >= len(self.data) or left > right or left > len(self.data):
             raise IndexError
-        return self.cache[left][right-left]
+        
+        # return the single value if the start is 0 (no subtraction needed),
+        #   otherwise return the sum from 0 -> right minus the sum from 0 -> left-1
+        # for example: sum from 2 to 5 would be the same as sum from 0 to 5 (self.cache[5])
+        #   minus the sum from 0 to 1 (self.cache[2-1]), leaving only 2 to 5
+        return self.cache[right] if left == 0 else self.cache[right] - self.cache[left-1]
 
 def t():
     obj = NumArray([-2,0,3,-5,2,-1])
