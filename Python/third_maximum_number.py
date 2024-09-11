@@ -35,6 +35,8 @@ Constraints:
 
 Follow up: Can you find an O(n) solution?"""
 
+import heapq
+from queue import PriorityQueue
 import pytest
 from typing import List
 
@@ -42,16 +44,8 @@ class Solution:
     def test(self):
         return self.thirdMax([1, 2, 3])
     def thirdMax(self, nums: List[int]) -> int:
-        nums.sort()
-        res = []
-        k = 3
-        for num in nums[-1::-1]:
-            if not k:
-                break
-            if num not in res:
-                res.append(num)
-                k -= 1
-        return res[-1] if len(res) >= 3 else res[0]
+        n = sorted(list(set(nums)))
+        return n[-3] if len(n) >= 3 else n[-1]
 
 @pytest.mark.parametrize(
     "nums, expected",
