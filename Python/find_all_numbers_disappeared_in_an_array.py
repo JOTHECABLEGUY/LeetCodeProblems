@@ -29,11 +29,7 @@ class Solution:
         return self.findDisappearedNumbers([1, 2, 3, 4, 5, 6, 6])
     
     def findDisappearedNumbers(self, nums: List[int]) -> List[int]:
-        if not nums:
-            return []
-        n = len(nums)
-        eles = set(range(1, n+1))
-        return list(eles - set(nums))
+        return list(set(range(1, len(nums)+1)) - set(nums)) if nums else []
 
 
 
