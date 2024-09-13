@@ -41,20 +41,50 @@ queries[i].length == 2
 0 <= lefti <= righti < arr.length */
 
 class Solution {
+
+    /*
+        method to perform xor on subarrays of an array given the subarrays' bounds
+        @param arr (int[]): array of integers to perform xor on
+        @param queries (int[][]): array of pairs of integers representing bounds of subarrays
+            to perform the xor over
+        @returns int[]: an array such that answer[i] is the result of the ith query in queries
+    */
     public int[] xorQueries(int[] arr, int[][] queries) {
+
+        // array to store the result of xor from 0 to the ith position in arr
+        int[] prefix = new int[arr.length];
+
+        // array to store the results of each query
         int[] answer = new int[queries.length];
-        for (int q_index = 0; q_index < queries.length; q_index++){
-            answer[q_index] = arr[queries[q_index][0]];
-            for (int i = queries[q_index][0]+1; i <= queries[q_index][1]; i++){
-                answer[q_index] = answer[q_index]^arr[i];
-            }
+
+        // initialize the first element of prefix to be the first element from arr (result of query {0, 0})
+        prefix[0] = arr[0];
+
+        // build the prefix array, each entry is the current element in arr xor the previous xor result in the prefix array
+        for (int i = 1; i < arr.length; i++){
+            prefix[i] = prefix[i-1]^arr[i];
+        }
+
+        // process the queries
+        for (int i = 0; i < queries.length; i++){
+
+            // the first index and second index of the query
+            int first = queries[i][0];
+            int second = queries[i][1];
+
+            // if first is 0, the prefix array already has the requested answer, so we take it from there
+            if (first == 0) answer[i] = prefix[second];
+
+            // otherwise, xor the prefix of the second value (right bound) with the prefix of the 
+            //      element before the first value (left bound). e.g. [2, 3] is the same as [0, 3]^[0, 1]
+            else answer[i] = prefix[second]^prefix[first-1];
         }
         return answer;
     }
     public static void main(String args[]){
         Solution obj = new Solution();
-        int[] arr = {1, 3, 7, 8};
-        int[][] qs = {{0, 1}, {2, 3}, {0, 3}, {3, 3}};
+        int[] arr = {1, 3, 4, 8};
+        int[][] qs = {{0, 1}, {1, 2}, {0, 3}, {3, 3}};
         int[] ans = obj.xorQueries(arr, qs);
         System.out.println(Arrays.toString(ans));
     }
