@@ -1,15 +1,12 @@
-
-import java.util.Arrays;
-
 /*1310. XOR Queries of a Subarray
 Solved
 Medium
 Topics
 Companies
 Hint
-You are given an array arr of positive integers. You are also given the array queries where queries[i] = [lefti, righti].
+You are given an array arr of positive integers. You are also given the array queries where queries[i] = [left_i, right_i].
 
-For each query i compute the XOR of elements from lefti to righti (that is, arr[lefti] XOR arr[lefti + 1] XOR ... XOR arr[righti] ).
+For each query i compute the XOR of elements from left_i to right_i (that is, arr[left_i] XOR arr[left_i + 1] XOR ... XOR arr[right_i] ).
 
 Return an array answer where answer[i] is the answer to the ith query.
 
@@ -38,7 +35,9 @@ Constraints:
 1 <= arr.length, queries.length <= 3 * 104
 1 <= arr[i] <= 109
 queries[i].length == 2
-0 <= lefti <= righti < arr.length */
+0 <= left_i <= right_i < arr.length */
+
+import java.util.Arrays;
 
 class Solution {
 
@@ -81,6 +80,7 @@ class Solution {
         }
         return answer;
     }
+    
     public static void main(String args[]){
         Solution obj = new Solution();
         int[] arr = {1, 3, 4, 8};
