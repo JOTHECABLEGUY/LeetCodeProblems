@@ -32,25 +32,36 @@ Constraints:
 1 <= nums.length <= 105
 1 <= nums[i] <= 106*/
 class Solution {
+
+    /**
+     * Method to find the longest subarray with the maximum bitwise AND (i.e. 4 AND 4 is 4, but 2 AND 4 is 2)
+     * @param nums (int[]): array of numbers to search
+     * @return int: maximum length of continuous integers that are equal to the maximum of the input array
+     */
     public int longestSubarray(int[] nums) {
-        int max_val = 0;
+
+        // get the maximum value in the array
+        int max_val = Integer.MIN_VALUE;
         for (int i: nums) if (i>max_val) max_val = i;
+
+        // initialize global and local maximum counts
         int max_count = 1;
-        int index = 0;
-        int sub_count = 1;
-        while (index < nums.length){
-            if (nums[index] != max_val){
-                index++;
-                sub_count = 1;
-                continue;
-            }
-            while (index+1 < nums.length && nums[index] == nums[index+1] && nums[index] == max_val){
-                sub_count++;
-                index++;
-            }
-            index++;
+        int sub_count = 0;
+
+        // check each index for elements that equal the maximum value
+        for (int i = 0; i < nums.length; i++){
+
+            // if the max is found, increase the sub count to track continuous Integers
+            if (nums[i] == max_val) sub_count++;
+
+            // otherwise reset the sub count when the continuity breaks
+            else sub_count = 0;
+
+            // after each iteration, need to check if we found a new longest subarray that meets the conditions
             max_count = Math.max(sub_count, max_count);
         }
+
+        // return the maximum length of the subarray with the same value that is also equal to the maximum value in the array
         return max_count;
     }
 
