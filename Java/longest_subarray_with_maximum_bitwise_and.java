@@ -1,6 +1,3 @@
-
-import java.util.*;
-
 /*2419. Longest Subarray With Maximum Bitwise AND
 Medium
 You are given an integer array nums of size n.
@@ -36,35 +33,30 @@ Constraints:
 1 <= nums[i] <= 106*/
 class Solution {
     public int longestSubarray(int[] nums) {
-        int max_val = nums[0];
-        HashMap<Integer, ArrayList<Integer>> indices_map = new HashMap<>();
-        for (int n= 0; n < nums.length; n++){
-            if (!indices_map.containsKey(nums[n])){
-                indices_map.put(nums[n], new ArrayList<>(3));
-            }
-            indices_map.get(nums[n]).add(n);
-            if (nums[n] > max_val){
-                max_val = nums[n];
-            }
-        }
-        int max_count = 0;
+        int max_val = 0;
+        for (int i: nums) if (i>max_val) max_val = i;
+        int max_count = 1;
+        int index = 0;
         int sub_count = 1;
-        int prev_ind = indices_map.get(max_val).get(0);
-        for (int i: indices_map.get(max_val)){
-            if (i == prev_ind+1) sub_count++;
-            else{
-                max_count = Math.max(sub_count, max_count);
+        while (index < nums.length){
+            if (nums[index] != max_val){
+                index++;
                 sub_count = 1;
+                continue;
             }
-            prev_ind = i;
+            while (index+1 < nums.length && nums[index] == nums[index+1] && nums[index] == max_val){
+                sub_count++;
+                index++;
+            }
+            index++;
+            max_count = Math.max(sub_count, max_count);
         }
-
-        return Math.max(max_count, sub_count);
+        return max_count;
     }
 
     public static void main(String[] args) {
         Solution obj = new Solution();
-        int[] nums = {1,2,3,4}; 
+        int[] nums = {323376,323376,323376,323376,323376,323376,323376,75940,75940}; 
         int count_4 = obj.longestSubarray(nums);
         System.out.println(count_4);
     }
