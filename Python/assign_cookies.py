@@ -35,17 +35,31 @@ class Solution:
         return self.findContentChildren([10, 9, 8], [5, 6, 7])
     
     def findContentChildren(self, g: List[int], s: List[int]) -> int:
-        if not g or not s:
+        
+        # return early if one of the inputs is empty
+        if not (g and s):
             return 0
+        
+        # sort both input lists
         g.sort()
         s.sort()
-        count, g_i= 0, 0
-        for s_i in s:
-            if g_i == len(g):
-                break
-            if g[g_i] <= s_i:
+        
+        # create pointers for positions in s and g, as well as a counter for number of content children
+        g_p, s_p, count = 0,0,0
+        
+        # while there are still elements to compare
+        while g_p < len(g) and s_p < len(s):
+            
+            # if the current greed can be satisfied by the current cookie size (greed is <= size),
+            #   increment counter and greed pointer
+            if g[g_p] <= s[s_p]:
                 count += 1
-                g_i += 1
+                g_p += 1
+            
+            # increment size pointer
+            s_p += 1
+        
+        # return number of content children
         return count
 
 @pytest.mark.parametrize(
