@@ -32,21 +32,59 @@ class Solution:
         return self.findTheLongestSubstring("eleetminicoworoep")
     
     def findTheLongestSubstring(self, s: str) -> int:
-        
-        max_len = 0
-        counter = [0,0,0,0,0]
-        d = {tuple(counter): -1}
-        vowels = ['a','e','i','o','u']
-        for index, l in enumerate(s):
-            if l in vowels:
-                i = vowels.index(l)
-                counter[i] = 1 - counter[i] # toggle
-            tup = tuple(counter)
-            if tup in d:
-                max_len = max(max_len, index - d[tup])
-            else:
-                d[tup] = index
+        """
+            Determine the length of the longest substring with an even count of vowels.
 
+            This function analyzes a given string and calculates the length of the longest
+            contiguous substring where each vowel appears an even number of times. If no such
+            substring exists, the function returns 0.
+
+            Args:
+                s (str): The input string to evaluate.
+
+            Returns:
+                int: The length of the longest substring with even counts of vowels.
+        """
+        
+        # maximum length of the required substring
+        max_len = 0
+        
+        # bit mask to keep track of parity (even/odd counts of vowels)
+        mask = 0 # 0x00000
+        
+        # dictionary to track the last occurrence of the current state of the mask
+        prev_states = {mask: -1}
+        
+        # set to test if the current character is a vowel
+        vowels = {'a','e','i','o','u'}
+        
+        # for each position in the string
+        for i in range(len(s)):
+            
+            # if a vowel is found, toggle the appropriate place in the mask using the 
+            #   previous mask state and the ascii codes for the letter. i.e. if i have a letter A
+            #   and the mask is currently 0, then ord(char) -ord('a') + 1 = ord('a') - ord('a') + 1 
+            #   = 1, so mask ^ 1 = 0 ^ 1 = 1, thus the first bit from the right is toggled to 1 since 
+            #   a single A has been seen. Further, if we encounter another A, the same expression
+            #   will evaluate to 1^1, resulting in the "A bit" being set to 0, meaning the current
+            #   substring has an even amount of As. If a U was then processed, the same expression
+            #   would result in the first bit from the left being toggled
+            if s[i] in vowels:
+                mask ^= (ord(s[i]) - ord('a')+1)
+                
+            # once the mask has been updated, check if the state has been seen before, meaning that 
+            #   the current numbers of vowels have the same parity as an iteration before. If this is the
+            #   case, the length of the substring that matches this state is the first occurrence of this state
+            #   taken from the current index. Update the max if this length is larger
+            if mask in prev_states:
+                max_len = max(max_len, i - prev_states[mask])
+            
+            # otherwise, this is the first time seeing this state, so we can mark this index in the state
+            #   dictionary to use in a future iteration
+            else:
+                prev_states[mask] = i
+
+        # return the maximum length of the substring with the conditions met
         return max_len
 
 @pytest.mark.parametrize(
