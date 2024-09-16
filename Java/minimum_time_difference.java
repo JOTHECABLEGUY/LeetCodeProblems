@@ -22,28 +22,32 @@ import java.util.*;
 
 class Solution {
     public int findMinDifference(List<String> timePoints) {
-
-        HashMap<String, Integer> hash = new HashMap<>();
-        int minDiff = Integer.MAX_VALUE;
         int hour24 = 24*60;
-        int diff, end;
-        for (String s: timePoints){
-            if(!hash.containsKey(s)) hash.put(s, extractMinutes(s));
+        if(timePoints.size() >= hour24) return 0;
+        boolean[] seen = new boolean[hour24];
+        for (String s:timePoints){
+            int t = extractMinutes(s);
+            if (seen[t]) return 0;
+            seen[t] = true;
         }
 
-        for (int start = 0; start < timePoints.size(); start++){
-            for (end = start+1; end < timePoints.size(); end++){
-                diff = Math.abs(extractMinutes(timePoints.get(end)) - extractMinutes(timePoints.get(start)));
-                minDiff = Math.min(minDiff, Math.min(diff, hour24 - diff));
-                if (minDiff == 0) return 0;
+        int minDiff = Integer.MAX_VALUE;
+        int firstIndex = Integer.MAX_VALUE;
+        int prevIndex = Integer.MAX_VALUE;
+
+        for (int index = 0; index < hour24; index++){
+            if(seen[index]){
+                if(firstIndex == Integer.MAX_VALUE) firstIndex = index;
+                else minDiff = Math.min(minDiff, index - prevIndex);
+                prevIndex = index;
             }
         }
+        minDiff = Math.min(minDiff, hour24 + firstIndex - prevIndex);
         return minDiff;
     }
 
     private static int extractMinutes(String s){
-        String[] spl = s.split(":");
-        return Integer.parseInt(spl[0])*60 + Integer.parseInt(spl[1]);
+        return ((s.charAt(0) - '0')*10 + s.charAt(1)-'0')*60 + (s.charAt(3)-'0')*10 + s.charAt(4) - '0';
     }
 
     public static void main(String[] args){
