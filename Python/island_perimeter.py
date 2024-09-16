@@ -30,6 +30,7 @@ col == grid[i].length
 grid[i][j] is 0 or 1.
 There is exactly one island in grid."""
 
+import itertools
 import pytest
 from typing import List
 
@@ -39,22 +40,42 @@ class Solution:
         return self.islandPerimeter([[0,1,0,0],[1,1,1,0],[0,1,0,0],[1,1,0,0]])
 
     def islandPerimeter(self, grid: List[List[int]]) -> int:
+        """
+            Calculate the perimeter of an island represented in a grid.
+
+            This function takes a 2D grid where 1s represent land and 0s represent water, 
+            and computes the total perimeter of the island formed by the land cells. 
+            The perimeter is defined as the number of edges of land cells that are not 
+            adjacent to other land cells.
+
+            Args:
+                grid (List[List[int]]): A 2D list representing the grid of land and water.
+
+            Returns:
+                int: The perimeter of the island. Returns 0 if the grid is empty or contains no land.
+        """
+        
+        # return early if there are no cells to process
         if not (grid and grid[0]):
             return 0
+        
+        # store the accumulated perimeter
         perim = 0
-        exposed_sides = 4
-        rows = len(grid)
-        cols = len(grid[0])
-        for i in range(rows):
-            for j in range(cols):
-                if grid[i][j] == 0: continue
-                if i > 0 and grid[i-1][j]: exposed_sides -= 1
-                if i + 1 < rows and grid[i+1][j]: exposed_sides -= 1
-                if j > 0 and grid[i][j-1]: exposed_sides -= 1
-                if j + 1 < cols and grid [i][j+1]: exposed_sides -= 1
-                perim += exposed_sides
-                exposed_sides = 4
-                
+        
+        # traverse the grid using the product of ranges
+        for i, j in itertools.product(range(len(grid)), range(len(grid[0]))):
+            
+            # continue if water
+            if not grid[i][j]: continue
+            
+            # add 4 to perimeter and take 2 away if land to the left or above,
+            #   if there is land below or to the right, future iterations will 
+            #   adjust the perimeter
+            perim += 4
+            if i > 0 and grid[i-1][j]: perim -= 2
+            if j > 0 and grid[i][j-1]: perim -= 2
+        
+        # return perimeter of landmass
         return perim
 
 @pytest.mark.parametrize("grid, expected, _id", [
