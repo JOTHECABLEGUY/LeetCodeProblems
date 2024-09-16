@@ -24,36 +24,33 @@ from typing import List
 class Solution:
     
     def test(self):
-        return self.findMinDifference(["12:59"])
-    
-    def convert_to_minutes(self, s:str):
-        h = int(s[:2])
-        m = int(s[3:])
-        if h > 23 or m > 59:
-            raise ValueError
-        return h*60 + m
+        return self.findMinDifference(["12:59", "13:59"])
     
     def findMinDifference(self, timePoints: List[str]) -> int:
         if len(timePoints) < 2:
             return 0
         hours_24 = 24*60
-        
-        seen = [False]*hours_24
-        
+
+        seen = set()
+
         for tp in timePoints:
-            mins = self.convert_to_minutes(tp)
-            if seen[mins]: return 0
-            seen[mins] = True
+            h = int(tp[:2])
+            m = int(tp[3:])
+            if h > 23 or m > 59:
+                raise ValueError
+            mins = h*60 + m
+            if mins in seen: return 0
+            seen.add(mins)
 
-        min_diff, first_valid, last_valid = hours_24+1, -1, hours_24+1
+        seen = sorted(seen)
 
-        for i in range(hours_24):
-            if seen[i]:
-                if first_valid == -1: first_valid = i
-                else: min_diff = min(min_diff, i - last_valid)
-                last_valid = i
-        
-        return min(min_diff, hours_24 + first_valid - last_valid)
+        min_diff = hours_24 + seen[0] - seen[-1]
+
+        for i in range(len(seen)-1):
+            if seen[i+1] - seen[i] < min_diff:
+                min_diff = seen[i+1] - seen[i]
+
+        return min_diff
 
 @pytest.mark.parametrize("timePoints, expected, _id", [
         (["23:59", "00:00"], 1, "midnight_edge_case"),
