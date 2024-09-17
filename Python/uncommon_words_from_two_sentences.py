@@ -32,28 +32,44 @@ s1 and s2 do not have leading or trailing spaces.
 All the words in s1 and s2 are separated by a single space."""
 
 import pytest
-from collections import defaultdict
+from collections import defaultdict, Counter
 from typing import List
 
 class Solution:
     
-    def build_counter(self, s):
-        
-        res = defaultdict(int)
-        for t in s.split(' '):
-            res[t] += 1
-        return res
-    
     def uncommonFromSentences(self, s1: str, s2: str) -> List[str]:
-        s1_counter = self.build_counter(s1)
-        s2_counter = self.build_counter(s2)
+        """
+            Find the uncommon words from two sentences.
+
+            This function takes two sentences as input and returns a list of words that are present
+            in one sentence but not in the other. Words that appear more than once in either sentence
+            are excluded from the result.
+
+            Args:
+                s1 (str): The first sentence.
+                s2 (str): The second sentence.
+
+            Returns:
+                List[str]: A list of uncommon words found in either sentence.
+        """
         
+        # build counters for the tokens in the sentences
+        s1_counter = Counter(s1.split(' '))
+        s2_counter = Counter(s2.split(' '))
+        
+        # filter down to only words that occur at most once in one or both sentences
+        s1_tokens = {w for w in s1_counter if s1_counter[w] < 2 and s2_counter[w] < 2}
+        s2_tokens = {w for w in s2_counter if s1_counter[w] < 2 and s2_counter[w] < 2}
+        
+        # if one of the sentences is empty, just return the tokens that occur in the other 
+        #   sentence if it isn't empty, otherwise return an empty list
         if not s1:
-            return [k for k, c in s2_counter.items() if c < 2] if s2 else []
+            return list(s2_tokens) if s2 else []
         if not s2:
-            return [k for k, c in s1_counter.items() if c < 2] if s1 else []
+            return list(s1_tokens) if s1 else []
         
-        return [k for k in s1_counter.keys() ^ s2_counter.keys() if s1_counter[k] < 2 and s2_counter[k] < 2]
+        # return the list of tokens that only occur in one sentence (they are guaranteed to be uncommon at this point)
+        return list(s1_tokens ^ s2_tokens)
 
 @pytest.mark.parametrize(
     "s1, s2, expected",
@@ -93,7 +109,7 @@ def test_uncommonFromSentences(s1, s2, expected):
     result = solution.uncommonFromSentences(s1, s2)
 
     # Assert
-    assert result == expected
+    assert set(result) == set(expected)
 
 if __name__ == "__main__":
     print(Solution().uncommonFromSentences("s z z z s", "s ejt z"))
