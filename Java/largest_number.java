@@ -22,20 +22,38 @@ Constraints:
 import java.util.*;
 
 class Solution {
+
+    /**
+     * Method to find the largest integer result of concatenation of all elements in an input array
+     * @param nums (int[]): array of numbers to concatenate
+     * @return String: largest possible number created from input elements
+     */
     public String largestNumber(int[] nums) {
+
+        // convert all input numbers to Strings
         String[] str_nums = new String[nums.length];
         for (int i = 0; i < nums.length; i++){ str_nums[i] = Integer.toString(nums[i]);}
-        Comparator<String> c = new Comparator<>(){
+
+        // define a Custom Comparator to sort the input array
+        Comparator<String> c = new Comparator<String>(){
+
+            // method used to compare 2 Strings: test both ways to concatenate a pair
+            //  don't swap if they are in the optimal order, sorted largest -> smallest
             @Override
             public int compare(String a, String b){
                 String f = a+b; String sec = b+a; return sec.compareTo(f);
             }
         };
+
+        // sort the array of strings using custom sorting
         Arrays.sort(str_nums, c);
+
+        // in the case that all inputs are 0, return as soon as possible
         if (str_nums[0].charAt(0) == '0') return "0";
+
+        // concatenate the Strings using a StringBuilder and return it after converting to a base String
         StringBuilder final_num = new StringBuilder();
         for (String n:str_nums) final_num.append(n);
         return final_num.toString();
     }
-    
 }
