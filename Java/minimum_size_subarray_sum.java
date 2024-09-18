@@ -24,8 +24,7 @@ Constraints:
 1 <= target <= 109
 1 <= nums.length <= 105
 1 <= nums[i] <= 104
-
-Follow up: If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log(n)). */
+*/
 
 class Solution {
 
@@ -37,20 +36,28 @@ class Solution {
      *              subarray is greater than or equal to the given target
      */
     public int minSubArrayLen(int target, int[] nums) {
-        int len = Integer.MAX_VALUE; int sum = 0;
-        int l = 0;
-        int r = 0;
-        while (r< nums.length){
+
+        // initialize length, sum accumulator, and left pointer
+        int len = Integer.MAX_VALUE, sum = 0, l = 0;
+
+        // start window at (0,0), increase the right bound with every iteration
+        for (int r = 0; r < nums.length; r++){
+
+            // add the rightmost value to the sum
             sum += nums[r];
+
+            // while the sum is valid, increase the left bound (shrink window from the left)
+            //  and update the sum by subtracting until the window sum is no longer reaching 
+            //  the target. Update the length each time
             while (sum >= target){
                 len = Math.min(len, r-l+1);
-                sum -= nums[l];
-                l++;
+                sum -= nums[l++];
             }
-            r++;
         }
-        if(len == Integer.MAX_VALUE) len = 0;
-        return len;
+
+        // if length was never updated, it will still be the max value, meaning there is no valid
+        //  subarray, so return 0, otherwise return the length
+        return len == Integer.MAX_VALUE ? 0 : len;
     }
 
     public static void main(String[] args){
