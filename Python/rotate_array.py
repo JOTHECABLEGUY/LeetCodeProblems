@@ -46,14 +46,10 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        n = len(nums)
-        if not (n and k): return
-        k = k%n
+        if not nums: return
+        k = k%len(nums)
         if not k: return
-        first_part, sec_part = [],[]
-        for i, num in enumerate(nums):
-            if i < n - k: sec_part.append(num)
-            else: first_part.append(num)
+        first_part, sec_part = nums[-k:], nums[:-k]
         nums[:k] = first_part
         nums[k:] = sec_part
 
