@@ -38,12 +38,26 @@ class rotate_array {
      * @param k (int): number of steps to rotate the array by
      */
     public void rotate(int[] nums, int k) {
+
+        // if k is above the length of the array, only need to rotate by the modulo
         k %= nums.length;
+
+        // if no rotation is needed, exit early
         if (k == 0) return;
+
+        // array to store the correct order
         int[] correctOrder = new int[nums.length];
+
+        // index of where next element should be inserted in the correct order
         int ins_index = 0;
+
+        // get the last k elements of the input array, add them at the beginning of the correct order
         for (int i = nums.length - k; i < nums.length; i++) correctOrder[ins_index++] = nums[i];
+
+        // get the first elements up to the k last elements and add them after the previous loop's stopping point
         for (int i = 0; i < nums.length-k; i++)             correctOrder[ins_index++] = nums[i];
+
+        // copy the correct order into the input array and return
         for (int i = 0; i < nums.length; i++)               nums[i] = correctOrder[i];
     }
 }
