@@ -47,11 +47,11 @@ class Solution:
         Do not return anything, modify nums in-place instead.
         """
         if not nums: return
-        k = k%len(nums)
+        k %= len(nums)
         if not k: return
-        first_part, sec_part = nums[-k:], nums[:-k]
-        nums[:k] = first_part
-        nums[k:] = sec_part
+        nums.reverse()
+        nums[:k] = reversed(nums[:k])
+        nums[k:] = reversed(nums[k:])
 
 @pytest.mark.parametrize(
     "nums, k, expected",
