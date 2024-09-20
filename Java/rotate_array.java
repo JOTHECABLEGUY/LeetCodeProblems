@@ -30,8 +30,6 @@ Follow up:
 Try to come up with as many solutions as you can. There are at least three different ways to solve this problem.
 Could you do it in-place with O(1) extra space? */
 
-import java.util.ArrayList;
-
 class rotate_array {
 
     /**
@@ -42,15 +40,10 @@ class rotate_array {
     public void rotate(int[] nums, int k) {
         k %= nums.length;
         if (k == 0) return;
-        ArrayList<Integer> correctOrder = new ArrayList<>();
-        for (int i = Math.min(k, nums.length); i > 0; i--){
-            correctOrder.add(nums[nums.length - i]);
-        }
-        for (int i = 0; i < nums.length-k; i++){
-            correctOrder.add(nums[i]);
-        }
-        for (int i = 0; i < nums.length; i++){
-            nums[i] = correctOrder.get(i);
-        }
+        int[] correctOrder = new int[nums.length];
+        int ins_index = 0;
+        for (int i = nums.length - k; i < nums.length; i++) correctOrder[ins_index++] = nums[i];
+        for (int i = 0; i < nums.length-k; i++)             correctOrder[ins_index++] = nums[i];
+        for (int i = 0; i < nums.length; i++)               nums[i] = correctOrder[i];
     }
 }
