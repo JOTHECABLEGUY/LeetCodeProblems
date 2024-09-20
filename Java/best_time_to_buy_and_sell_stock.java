@@ -29,12 +29,13 @@ Constraints:
 
 class best_time_to_buy_and_sell_stock {
     public int maxProfit(int[] prices) {
+        if (prices.length < 2) return 0;
         int max_diff = 0;
+        int cheapest_so_far = prices[0];
 
-        for (int i = 0; i < prices.length-1; i++){
-            for (int j = i; j < prices.length; j++){
-                max_diff = Math.max(max_diff, prices[j] - prices[i]);
-            }
+        for (int i = 1; i < prices.length; i++){
+            if (prices[i] < cheapest_so_far) {cheapest_so_far = prices[i]; continue;}
+            if (prices[i] - cheapest_so_far > max_diff) max_diff = prices[i] - cheapest_so_far;
         }
         return max_diff;
     }
