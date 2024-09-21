@@ -46,14 +46,15 @@ class Solution {
         // return early if no profit available
         if (prices.length < 2) return 0;
 
-        // max profit is set to 0 since no trades have been made
-        int maxProfit = 0;
+        // buy point starts at the first price, max profit is set to 0 since no trades have been made
+        int buy = prices[0], maxProfit = 0;
 
         // traverse the array for possible sell points
         for (int sell = 1; sell < prices.length; sell++){
 
             // if the stock ever rises above the buy price, sell for profit
-            if (prices[sell] > prices[sell-1]) maxProfit += prices[sell] - prices[sell-1];
+            if (prices[sell] > buy) maxProfit += prices[sell] - buy; 
+            buy = prices[sell];
         }
 
         // return max profit
