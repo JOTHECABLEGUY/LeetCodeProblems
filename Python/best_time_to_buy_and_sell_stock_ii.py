@@ -41,14 +41,10 @@ class Solution:
     
     def maxProfit(self, prices: List[int]) -> int:
         if len(prices) < 2: return 0
-        cheapest_so_far = 0
         max_profit = 0
         for i in range(1, len(prices)):
-            if prices[i] < prices[cheapest_so_far] or prices[i] < prices[i-1]:
-                max_profit += prices[i-1] - prices[cheapest_so_far]
-                cheapest_so_far = i
-        if cheapest_so_far != i:
-            max_profit += max(prices[cheapest_so_far:]) - prices[cheapest_so_far]
+            if prices[i] > prices[i-1]:
+                max_profit += prices[i] - prices[i-1]
         return max_profit
 
 @pytest.mark.parametrize("prices, expected, _id", [
