@@ -36,6 +36,11 @@ Constraints:
 import java.util.HashSet;
 
 class Solution {
+
+    private class Trie{
+        Trie[] children = new Trie[10];
+    }
+    
     public int longestCommonPrefix(int[] arr1, int[] arr2) {
         int maxLen = 0;
         HashSet<Integer> hs = new HashSet<>();
@@ -67,5 +72,46 @@ class Solution {
             count++;
         }
         return count;
+    }
+
+    public int longestCommonPrefix2(int[] arr1, int[] arr2){
+        Trie root = new Trie();
+        for (int num : arr1){
+            Trie parent = root;
+            int multi = get_multiplier(num);
+            while (multi > 0){
+                int digit = num/multi % 10;
+                if (parent.children[digit] == null) parent.children[digit] = new Trie();
+                parent = parent.children[digit];
+                multi /= 10;
+            }
+        }
+
+        int longest = 0;
+        for(int num : arr2){
+            int multi = get_multiplier(num);
+            int length = 0;
+            Trie parent = root;
+            while (multi > 0){
+                int digit = num/multi % 10;
+                if(parent.children[digit] == null) break;
+                parent = parent.children[digit];
+                length++;
+                multi /= 10;
+            }
+            if (length > longest) longest = length;
+        }
+        return longest;
+    }
+    private int get_multiplier(int num){
+        int places = get_places(num);
+        return (int) Math.pow(10, places-1);
+    }
+
+    public static void main(String[] args){
+        Solution obj = new Solution();
+        int[] arr1 = new int[]{1, 2, 3, 4};
+        int[] arr2 = new int[]{1, 2, 3, 4};
+        System.out.println(obj.longestCommonPrefix2(arr1, arr2));
     }
 }
