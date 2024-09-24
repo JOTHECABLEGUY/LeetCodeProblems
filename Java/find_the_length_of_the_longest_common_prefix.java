@@ -104,8 +104,9 @@ class Solution {
         return longest;
     }
     private int get_multiplier(int num){
-        int places = get_places(num);
-        return (int) Math.pow(10, places-1);
+        int places = 1;
+        while (places * 10 <= num) places *= 10;
+        return places;
     }
 
     public static void main(String[] args){
