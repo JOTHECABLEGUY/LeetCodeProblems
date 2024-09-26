@@ -43,21 +43,16 @@ import java.util.*;
 class MyCalendar {
     private ArrayList<int[]> data;
 
-    public MyCalendar() {
-        this.data = new ArrayList<>();
-    }
+    public MyCalendar() {this.data = new ArrayList<>();}
     
     public boolean book(int start, int end) {
-        for (int[] pair : this.data){
-            if (start < pair[1] && end > pair[1]) return false;
-        }
+        for (int[] pair : this.data) if (start < pair[1] && end > pair[0]) return false;
         this.data.add(new int[]{start, end});
         return true;
     }
 
     public static void main(String[] args) {
         MyCalendar obj = new MyCalendar();
-        // boolean r;
         int[][] inputs = new int[][]{{10, 20}, {15, 25}, {20, 30}};
         boolean[] res = new boolean[inputs.length];
         for (int i = 0; i < inputs.length; i++){
