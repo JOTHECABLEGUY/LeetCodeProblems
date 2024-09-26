@@ -41,30 +41,19 @@ At most 1000 calls will be made to book. */
 import java.util.*;
 
 class MyCalendar {
-    private ArrayList<Integer> starts;
-    private ArrayList<Integer> ends;
+    private ArrayList<int[]> data;
 
     public MyCalendar() {
-        this.starts = new ArrayList<>();
-        this.ends = new ArrayList<>();
+        this.data = new ArrayList<>();
     }
     
     public boolean book(int start, int end) {
-        int count = 0, sp = 0, ep = 0;
-
-        while (sp < this.starts.size() && ep < this.ends.size()){
-            if (count > 1) return false;
-            if (start < this.ends.get(ep) && end > this.starts.get(sp)) return false;
-            if (this.starts.get(sp) < this.ends.get(ep)){
-                count++; sp++; 
-            } 
-            else {
-                count--; ep++;}
+        for (int[] pair : this.data){
+            if (start > pair[0] && start < pair[1]) return false;
+            if (end > pair[0] && end < pair[1]) return false;
+            if (start < pair[1] && end > pair[1]) return false;
         }
-        this.starts.add(start);
-        this.ends.add(end);
-        Collections.sort(this.starts);
-        Collections.sort(this.ends);
+        this.data.add(new int[]{start, end});
         return true;
     }
 
