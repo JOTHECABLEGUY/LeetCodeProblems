@@ -49,8 +49,6 @@ class MyCalendar {
     
     public boolean book(int start, int end) {
         for (int[] pair : this.data){
-            if (start > pair[0] && start < pair[1]) return false;
-            if (end > pair[0] && end < pair[1]) return false;
             if (start < pair[1] && end > pair[1]) return false;
         }
         this.data.add(new int[]{start, end});
