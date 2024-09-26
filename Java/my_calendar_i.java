@@ -39,37 +39,38 @@ At most 1000 calls will be made to book. */
  */
 
 import java.util.*;
-class Tree{
-    int start = 0, end = 0;
-    Tree right = null, left = null;
-    public Tree(int start, int end){
-        this.start = start;
-        this.end = end;
-        this.right = null;
-        this.left = null;
-    }
 
-    public boolean insert(int start, int end){
-        Tree curr = this;
-        while (true){
-            if (start >= curr.end){
-                if (curr.right == null){
-                    curr.right = new Tree(start, end);
-                    return true;
+class MyCalendar {
+    private class Tree{
+        int start = 0, end = 0;
+        Tree right = null, left = null;
+        public Tree(int start, int end){
+            this.start = start;
+            this.end = end;
+            this.right = null;
+            this.left = null;
+        }
+    
+        public boolean insert(int start, int end){
+            Tree curr = this;
+            while (true){
+                if (start >= curr.end){
+                    if (curr.right == null){
+                        curr.right = new Tree(start, end);
+                        return true;
+                    }
+                    curr = curr.right;
                 }
-                curr = curr.right;
+                else if (end <= curr.start){
+                    if (curr.left == null){
+                        curr.left = new Tree(start, end);
+                        return true;
+                    }
+                    curr = curr.left;
+                } else return false;
             }
-            else if (end <= curr.start){
-                if (curr.left == null){
-                    curr.left = new Tree(start, end);
-                    return true;
-                }
-                curr = curr.left;
-            } else return false;
         }
     }
-}
-class MyCalendar {
     private Tree root;
 
     public MyCalendar() {this.root = null;}
