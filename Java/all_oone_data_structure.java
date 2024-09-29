@@ -82,7 +82,7 @@ class AllOne {
                 this.hm.remove(key);
                 this.keys.remove(key);
                 if (key.equals(this.min_key)){
-                    if (this.keys.size() == 0){this.min_key = ""; return;}
+                    if (this.keys.isEmpty()){this.min_key = ""; return;}
                     int min_val = Integer.MAX_VALUE;
                     for(Map.Entry<String, Integer> entry : this.hm.entrySet()){
                         if (entry.getValue() < min_val){ 
