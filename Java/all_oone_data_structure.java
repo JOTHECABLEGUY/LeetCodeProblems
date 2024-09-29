@@ -56,10 +56,8 @@ class AllOne {
             this.hm.put(key, this.hm.get(key) + 1);
             if (this.hm.get(key) > this.hm.get(this.max_key)) this.max_key = key;
             if (key.equals(this.min_key)){
-                int comp_val = this.hm.get(key);
                 for(Map.Entry<String, Integer> entry : this.hm.entrySet()){
-                    if (entry.getValue() < comp_val){
-                        comp_val = entry.getValue();
+                    if (entry.getValue() < this.hm.get(key)){
                         this.min_key = entry.getKey(); 
                         break;
                     }
