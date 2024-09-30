@@ -29,7 +29,7 @@ class Solution {
         Arrays.sort(citations);
         int max_h = 0;
         for (int i = citations.length-1; i > -1; i--){
-            if (citations[i] >= citations.length-i && citations.length - i > max_h){
+            if (citations[i] >= citations.length-i){
                 max_h = citations.length - i;
             }
         }
