@@ -39,6 +39,7 @@ class RandomizedSet {
 
     private ArrayList<Integer> data;
     private HashMap<Integer, Integer> index_map;
+    private Random rand = new Random();
     public RandomizedSet() {
         this.data = new ArrayList<>();
         this.index_map = new HashMap<>();
@@ -62,7 +63,7 @@ class RandomizedSet {
     }
     
     public int getRandom() {
-        int index = (int)(Math.random()*(this.data.size()));
+        int index = this.rand.nextInt(this.data.size());
         return this.data.get(index);
     }
 }
