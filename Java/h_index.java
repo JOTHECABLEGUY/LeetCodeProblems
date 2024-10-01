@@ -35,4 +35,19 @@ class Solution {
         }
         return max_h;
     }
+
+    public int hIndex2(int[] citations) {
+        int[] count = new int[citations.length + 1];
+
+        for (int c : citations){
+            if (c >= citations.length) count[citations.length]++;
+            else count[c]++;
+        }
+        int sum = 0;
+        for (int i = citations.length; i > -1; i--){
+            sum += count[i];
+            if (sum >= i) return i;
+        }
+        return 0;
+    }
 }
