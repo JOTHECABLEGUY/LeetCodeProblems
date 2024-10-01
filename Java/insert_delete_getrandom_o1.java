@@ -54,12 +54,10 @@ class RandomizedSet {
     public boolean remove(int val) {
         if (!this.index_map.containsKey(val)) return false;
         int index = this.index_map.get(val);
-        this.data.remove(index);
+        Collections.swap(this.data, index, this.data.size()-1);
+        this.index_map.put(this.data.get(index), index);
+        this.data.remove(this.data.size()-1);
         this.index_map.remove(val);
-        for (int i = index; i < this.data.size(); i++){
-            int v = this.data.get(i);
-            this.index_map.put(v, i);
-        }
         return true;
     }
     
